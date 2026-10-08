@@ -1,0 +1,11 @@
+<strings>
+    <string id="SetupRequired">Wymagana konfiguracja\n\nOtwórz Garmin Connect\ni skonfiguruj\nkonto Zappka.</string>
+    <string id="InvalidConfig">Nieprawidłowa\nkonfiguracja Zappka</string>
+    <string id="QrFailed">Nie można\nwygenerować QR</string>
+    <string id="UserIdTitle">ID użytkownika Żappka (ployId)</string>
+    <string id="UserIdPrompt">Tylko cyfry, np. 12 cyfr</string>
+    <string id="SecretTitle">Sekret Żappka (hex)</string>
+    <string id="SecretPrompt">Po zapisaniu przenoszony do pamięci zegarka i usuwany z ustawień</string>
+    <string id="AppName">Zappka QR</string>
+    <string id="InvalidValue">Nieprawidłowa wartość</string>
+</strings>

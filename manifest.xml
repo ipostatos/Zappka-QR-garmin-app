@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<iq:manifest version="3" xmlns:iq="http://www.garmin.com/xml/connectiq">
+    <iq:application id="5c2b7e0a9d4f4e1b8a3c6f2d1e0b9a87" type="watch-app" name="@Strings.AppName" entry="ZappkaApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="4.0.0">
+        <iq:products>
+            <iq:product id="instinct3solar45mm"/>
+            <iq:product id="instinct3amoled45mm"/>
+            <iq:product id="instinct3amoled50mm"/>
+        </iq:products>
+        <iq:permissions/>
+        <iq:languages>
+            <iq:language>eng</iq:language>
+            <iq:language>pol</iq:language>
+        </iq:languages>
+        <iq:barrels/>
+    </iq:application>
+</iq:manifest>

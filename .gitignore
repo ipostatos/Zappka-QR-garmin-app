@@ -1,0 +1,10 @@
+bin/
+*.prg
+*.iq
+*.der
+*.pem
+developer_key*
+.vscode/
+# never commit account data
+secrets*.json
+*.secret

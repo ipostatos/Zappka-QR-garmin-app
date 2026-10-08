@@ -1,0 +1,4 @@
+<properties>
+    <property id="userId" type="string"></property>
+    <property id="secret" type="string"></property>
+</properties>
