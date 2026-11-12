@@ -27,8 +27,8 @@
 - [ ] Phone number screen, SMS code picker (6 wheels), resend timer
 - [ ] Tests for response parsing and the state machine
 - [ ] Field test: link from the watch, then pay at a checkout
-- [ ] **Points balance** in the menu (Link build only), see the design doc. Open decision: it needs a
-      long-lived sign-in token on the watch
+- [ ] **Points balance** in the menu (Link build only), see the design doc. Long-lived sign-in token on
+      the watch accepted for the Link build only
 
 Design: [`ON_WATCH_LINKING.md`](ON_WATCH_LINKING.md).
 

@@ -63,7 +63,8 @@ push notification for this, so the watch cannot simply show one.
 - **Rules if built:** token only in the Link build, wiped by *Sign out*, never logged; the main
   build keeps zero permissions and no token.
 
-**Decision pending:** whether a long-lived account token on the watch is acceptable for this.
+**Decided (2026-11-12):** accepted for the Link build only. The token lives in that build's storage,
+is wiped by *Sign out* and is never logged; the main build stays offline with no token.
 
 ## Phone settings for SMS on the watch
 
