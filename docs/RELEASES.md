@@ -18,4 +18,20 @@ commit `0a57b52`, SDK `connectiq-sdk-win-9.1.0-2026-03-09-6a872a80b`
 | instinct3amoled45mm | `a8649a39cad4e176461e96bde67523b2b381a7c511fd6819aeba43f34cf317d8` | 25772 |
 | instinct3amoled50mm | `a8649a39cad4e176461e96bde67523b2b381a7c511fd6819aeba43f34cf317d8` | 25772 |
 
-Status: 17/17 simulator tests on all three devices. To be re-checked at a checkout before `v1.0.0`.
+Status: 17/17 simulator tests on all three devices.
+
+## v1.0.0
+
+Same code and binaries as `v1.0.0-rc1`. In daily use at Zabka checkouts on Instinct 3 AMOLED 45.
+
+## v1.1.0-rc1
+
+commit `2b873a4`, SDK `connectiq-sdk-win-9.1.0-2026-03-09-6a872a80b`
+
+| device | sha256 | bytes |
+|---|---|---|
+| instinct3solar45mm | `122506fc4925365dcb6f6549809a51abcc6c98a724a2e078049aac8939301710` | 22668 |
+| instinct3amoled45mm | `a96a326c2c68de0d874130ba16271cf9f25cbabbce1dd6fa875621676baeae06` | 28876 |
+| instinct3amoled50mm | `a96a326c2c68de0d874130ba16271cf9f25cbabbce1dd6fa875621676baeae06` | 28876 |
+
+Status: 26/26 simulator tests on all three devices. Menu to be checked on the watch before `v1.1.0`.
