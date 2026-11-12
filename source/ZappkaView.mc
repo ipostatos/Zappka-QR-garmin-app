@@ -73,8 +73,19 @@ class ZappkaView extends WatchUi.View {
         lightOn();
     }
 
+    function isCheckout() as Boolean {
+        return _checkout;
+    }
+
     function toggleCheckout() as Void {
-        _checkout = !_checkout;
+        setCheckout(!_checkout);
+    }
+
+    function setCheckout(on as Boolean) as Void {
+        if (on == _checkout) {
+            return;
+        }
+        _checkout = on;
         _openedAt = Time.now().value();   // restart the auto-exit timer
         lightOn();
         buzz(_checkout ? 60 : 30);
@@ -140,7 +151,7 @@ class ZappkaView extends WatchUi.View {
         }
         var rotated = _counter != -1l;
         _counter = counter;
-        if (rotated) {
+        if (rotated && Prefs.vibrateOnRotate()) {
             buzz(ZappkaProtocol.VIBE_ON_ROTATE_MS);
         }
         var creds = _creds as ZappkaCredentials;
@@ -214,32 +225,25 @@ class ZappkaView extends WatchUi.View {
     private function drawMessage(dc as Graphics.Dc, msg as String) as Void {
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
         // Keep text clear of the Instinct subscreen ring.
-        var cy = _sub != null ? dc.getHeight() * 3 / 5 : dc.getHeight() / 2;
+        var cy = TextScreen.centerY(dc.getHeight(), _sub, TextScreen.lineCount(msg));
         dc.drawText(dc.getWidth() / 2, cy, Graphics.FONT_XTINY, msg,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 }
 
-// MENU -> minimal info screen. Shows only non-sensitive facts.
+// Menu -> Status: clock check and account facts. Shows only non-sensitive values.
 class ZappkaInfoView extends WatchUi.View {
     function initialize() {
         View.initialize();
     }
 
     function onUpdate(dc as Graphics.Dc) as Void {
-        var r = CredentialStore.load();
-        var creds = r[1];
-        var now = Time.now().value();
-        var lines = "Zappka QR (unofficial)\n";
-        if (creds != null) {
-            lines += "ID " + creds.maskedUserId() + "\nkey: " + creds.secret.size() + " B\n";
-        } else {
-            lines += "not configured\n";
-        }
-        lines += "UTC " + now + "\nnext in " + TotpGenerator.secondsRemaining(now, ZappkaProtocol.TIME_STEP) + " s";
-        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_WHITE);
-        dc.clear();
-        dc.drawText(dc.getWidth() / 2, dc.getHeight() / 2, Graphics.FONT_XTINY, lines,
-            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        TextScreen.draw(dc, statusText(CredentialStore.load()[1], Time.now().value()));
+    }
+
+    static function statusText(creds as ZappkaCredentials or Null, now as Number) as String {
+        var id = creds != null ? "ID " + creds.maskedUserId() : "no account";
+        return id + "\nUTC " + now + "\nnext in " +
+            TotpGenerator.secondsRemaining(now, ZappkaProtocol.TIME_STEP) + " s";
     }
 }

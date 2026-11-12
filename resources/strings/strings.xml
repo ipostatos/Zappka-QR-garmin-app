@@ -1,20 +1,24 @@
 <strings>
     <string id="AppName">Zappka QR</string>
-    <string id="SetupRequired">Setup required\n\nOpen Garmin Connect\nand configure\nZappka account.</string>
-    <string id="InvalidConfig">Invalid Zappka\nconfiguration</string>
+    <string id="SetupRequired">Setup required\nAdd account in\nGarmin Connect</string>
+    <string id="InvalidConfig">Invalid account\nCheck ID\nand secret</string>
     <string id="QrFailed">Unable to\ngenerate QR</string>
     <string id="UserIdTitle">Żappka user ID (ployId)</string>
     <string id="UserIdPrompt">Digits only, e.g. 12 digits</string>
     <string id="SecretTitle">Żappka secret (hex)</string>
     <string id="SecretPrompt">Moved to watch storage and cleared from settings after saving</string>
     <string id="InvalidValue">Invalid value</string>
-    <string id="NeedUserId">Secret saved
-
-Now enter your
-Zappka user ID
-in Garmin Connect.</string>
-    <string id="SecretRejected">New secret rejected
-
-Previous account
-still active.</string>
+    <string id="NeedUserId">Secret saved\nNow add the\nuser ID</string>
+    <string id="SecretRejected">New secret\nrejected\nOld account kept</string>
+    <string id="MenuTitle">Zappka QR</string>
+    <string id="MenuCheckout">Checkout mode</string>
+    <string id="MenuCheckoutSub">Max light, 10 min</string>
+    <string id="MenuVibrate">Buzz on new code</string>
+    <string id="MenuVibrateSub">Every 30 s</string>
+    <string id="MenuStatus">Status</string>
+    <string id="MenuStatusSub">Clock and account</string>
+    <string id="MenuSignOut">Sign out</string>
+    <string id="MenuAbout">About</string>
+    <string id="SignOutConfirm">Sign out and delete\nthe account from\nthis watch?</string>
+    <string id="AboutBody">MIT License\nUnofficial,\nnot by Zabka</string>
 </strings>

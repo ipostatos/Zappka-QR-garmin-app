@@ -4,6 +4,8 @@ import Toybox.Lang;
 // See docs/zappka-protocol.md for the CONFIRMED / LIKELY / UNKNOWN status of each value.
 (:glance)
 module ZappkaProtocol {
+    const APP_VERSION = "1.1.0";   // keep in sync with the git tag and CHANGELOG
+
     // TOTP (RFC 6238 compatible)
     const TIME_STEP = 30;          // seconds
     const DIGITS = 6;

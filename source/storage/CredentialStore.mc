@@ -116,6 +116,16 @@ module CredentialStore {
         Application.Storage.deleteValue(KEY_REJECTED);
     }
 
+    // Menu -> Sign out: forget the account on the watch and in the app settings.
+    function signOut() as Void {
+        clear();
+        try {
+            Application.Properties.setValue(PROP_USER, "");
+        } catch (e) {
+        }
+        blankSecretProp();
+    }
+
     // Never leave the secret in Properties. Retried once; failure must not abort the import.
     function blankSecretProp() as Void {
         try {

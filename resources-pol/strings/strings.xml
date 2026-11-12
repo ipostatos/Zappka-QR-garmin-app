@@ -1,6 +1,6 @@
 <strings>
-    <string id="SetupRequired">Wymagana konfiguracja\n\nOtwórz Garmin Connect\ni skonfiguruj\nkonto Zappka.</string>
-    <string id="InvalidConfig">Nieprawidłowa\nkonfiguracja Zappka</string>
+    <string id="SetupRequired">Brak konta\nDodaj konto w\nGarmin Connect</string>
+    <string id="InvalidConfig">Błędne konto\nSprawdź ID\ni sekret</string>
     <string id="QrFailed">Nie można\nwygenerować QR</string>
     <string id="UserIdTitle">ID użytkownika Żappka (ployId)</string>
     <string id="UserIdPrompt">Tylko cyfry, np. 12 cyfr</string>
@@ -8,13 +8,17 @@
     <string id="SecretPrompt">Po zapisaniu przenoszony do pamięci zegarka i usuwany z ustawień</string>
     <string id="AppName">Zappka QR</string>
     <string id="InvalidValue">Nieprawidłowa wartość</string>
-    <string id="NeedUserId">Sekret zapisany
-
-Teraz wpisz
-ID użytkownika Żappka
-w Garmin Connect.</string>
-    <string id="SecretRejected">Nowy sekret odrzucony
-
-Poprzednie konto
-nadal aktywne.</string>
+    <string id="NeedUserId">Sekret zapisany\nTeraz dodaj\nID użytkownika</string>
+    <string id="SecretRejected">Nowy sekret\nodrzucony\nStare konto działa</string>
+    <string id="MenuTitle">Zappka QR</string>
+    <string id="MenuCheckout">Tryb kasy</string>
+    <string id="MenuCheckoutSub">Max jasność, 10 min</string>
+    <string id="MenuVibrate">Wibracja przy kodzie</string>
+    <string id="MenuVibrateSub">Co 30 s</string>
+    <string id="MenuStatus">Status</string>
+    <string id="MenuStatusSub">Zegar i konto</string>
+    <string id="MenuSignOut">Wyloguj</string>
+    <string id="MenuAbout">O aplikacji</string>
+    <string id="SignOutConfirm">Wylogować i usunąć\nkonto z tego\nzegarka?</string>
+    <string id="AboutBody">Licencja MIT\nNieoficjalna,\nnie od Zabki</string>
 </strings>

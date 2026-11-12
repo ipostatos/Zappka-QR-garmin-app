@@ -1,7 +1,7 @@
 import Toybox.Lang;
 import Toybox.WatchUi;
 
-// BACK = exit (default behaviour). MENU = info. START/SELECT = checkout mode on/off.
+// BACK = exit (default behaviour). MENU = menu. START/SELECT = checkout mode on/off.
 class ZappkaDelegate extends WatchUi.BehaviorDelegate {
     private var _view as ZappkaView;
 
@@ -16,7 +16,7 @@ class ZappkaDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onMenu() as Boolean {
-        WatchUi.pushView(new ZappkaInfoView(), new WatchUi.BehaviorDelegate(), WatchUi.SLIDE_IMMEDIATE);
+        ZappkaMenu.open(_view);
         return true;
     }
 }
