@@ -9,7 +9,8 @@ import Toybox.WatchUi;
 // Fullscreen QR. The QR is encoded once per TOTP step; the 1 s timer only redraws the countdown
 // and blits the cached bitmap.
 class ZappkaView extends WatchUi.View {
-    private var _state as Symbol = :missing;    // :ok, :missing, :invalid, :qrfail
+    private var _state as Symbol = :missing;    // :ok, :missing, :pending, :invalid, :qrfail
+    private var _noticeUntil as Number = 0;     // "new secret rejected" shown until this epoch second
     private var _creds as ZappkaCredentials or Null = null;
     private var _counter as Long = -1l;
     private var _qr as QrCode or Null = null;
@@ -31,6 +32,9 @@ class ZappkaView extends WatchUi.View {
         var r = CredentialStore.load();
         _state = r[0];
         _creds = r[1];
+        if (CredentialStore.consumeRejected()) {
+            _noticeUntil = Time.now().value() + ZappkaProtocol.NOTICE_SECONDS;
+        }
         _counter = -1l;
         _qr = null;
         _bitmap = null;
@@ -170,6 +174,11 @@ class ZappkaView extends WatchUi.View {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_WHITE);
         dc.clear();
 
+        if (now < _noticeUntil) {
+            drawMessage(dc, WatchUi.loadResource(Rez.Strings.SecretRejected) as String);
+            return;
+        }
+
         if (_state == :ok && _qr != null && _layout != null) {
             var l = _layout as QrLayout;
             if (_bitmap != null) {
@@ -192,6 +201,8 @@ class ZappkaView extends WatchUi.View {
         var msg;
         if (_state == :missing) {
             msg = WatchUi.loadResource(Rez.Strings.SetupRequired);
+        } else if (_state == :pending) {
+            msg = WatchUi.loadResource(Rez.Strings.NeedUserId);
         } else if (_state == :invalid) {
             msg = WatchUi.loadResource(Rez.Strings.InvalidConfig);
         } else {

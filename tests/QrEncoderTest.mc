@@ -6,6 +6,7 @@ import Toybox.Test;
 
 // Reference generated with Project Nayuki's Python `qrcodegen` 1.8 (independent implementation):
 // QrCode.encode_segments([QrSegment.make_bytes(payload)], Ecc.MEDIUM, 4, 4, mask=0, boostecl=False)
+(:test)
 const QR_REF_V4M = [
     "111111100011101100110101001111111",
     "100000101110100101011101001000001",
@@ -42,6 +43,7 @@ const QR_REF_V4M = [
     "111111101011100111001100111011011"
 ];
 
+// helper, not a test (a (:test) annotation would make the runner call it)
 function qrRow(qr as QrCode, y as Number) as String {
     var chars = new [qr.size];
     for (var x = 0; x < qr.size; x++) {

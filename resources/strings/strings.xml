@@ -8,4 +8,13 @@
     <string id="SecretTitle">Żappka secret (hex)</string>
     <string id="SecretPrompt">Moved to watch storage and cleared from settings after saving</string>
     <string id="InvalidValue">Invalid value</string>
+    <string id="NeedUserId">Secret saved
+
+Now enter your
+Zappka user ID
+in Garmin Connect.</string>
+    <string id="SecretRejected">New secret rejected
+
+Previous account
+still active.</string>
 </strings>

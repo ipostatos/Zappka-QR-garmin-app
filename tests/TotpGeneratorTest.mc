@@ -2,6 +2,7 @@ import Toybox.Lang;
 import Toybox.Test;
 
 // RFC 6238 Appendix B, SHA-1, key = ASCII "12345678901234567890".
+(:test)
 const RFC_KEY_HEX = "3132333435363738393031323334353637383930";
 
 (:test)

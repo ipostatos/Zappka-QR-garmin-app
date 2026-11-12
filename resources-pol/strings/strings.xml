@@ -8,4 +8,13 @@
     <string id="SecretPrompt">Po zapisaniu przenoszony do pamięci zegarka i usuwany z ustawień</string>
     <string id="AppName">Zappka QR</string>
     <string id="InvalidValue">Nieprawidłowa wartość</string>
+    <string id="NeedUserId">Sekret zapisany
+
+Teraz wpisz
+ID użytkownika Żappka
+w Garmin Connect.</string>
+    <string id="SecretRejected">Nowy sekret odrzucony
+
+Poprzednie konto
+nadal aktywne.</string>
 </strings>

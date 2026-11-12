@@ -2,7 +2,9 @@ import Toybox.Lang;
 import Toybox.Test;
 
 // Public example values from the reference project README - NOT a real account.
+(:test)
 const EXAMPLE_ID = "123456789012";
+(:test)
 const EXAMPLE_SECRET = "2db76449a55d59f1f9420b809edb1beb19dfa434ddb5dbf331f01aec35956e35";
 
 (:test)

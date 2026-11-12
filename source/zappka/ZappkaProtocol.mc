@@ -30,4 +30,5 @@ module ZappkaProtocol {
     const AUTO_EXIT_SECONDS = 180; // close the app if left open (battery)
     const CHECKOUT_EXIT_SECONDS = 600; // checkout mode: longer, but still bounded
     const VIBE_ON_ROTATE_MS = 120;     // short pulse when a new code appears (0 = off)
+    const NOTICE_SECONDS = 4;          // "new secret rejected" notice before the QR returns
 }
