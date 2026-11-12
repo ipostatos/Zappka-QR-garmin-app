@@ -44,15 +44,23 @@ runtime from screen size, shape and subscreen.
 1. **Get your account data (once, on a computer).** Use `login-for-secrets.py` from
    [iGerman00/zabka-totp-webapp](https://github.com/iGerman00/zabka-totp-webapp). It logs in with your
    phone number + SMS code and prints `{"secret":"<64 hex chars>","ployId":"<digits>"}`.
-   Read the script before running it.
+   Read the script before running it. It also runs on a phone (Android: Termux; iOS: a-Shell), so a
+   computer is not required.
+   Store the printed JSON in a password manager. On Windows you can keep it in a DPAPI vault bound to
+   your Windows user: `pwsh tools/vault.ps1 put secrets.json`, then delete `secrets.json`.
 2. **Install the app** (sideload, see Build).
 3. In **Garmin Connect** → device → Connect IQ apps → Zappka QR → Settings, enter:
    - *Żappka user ID (ployId)*: the digits
    - *Żappka secret (hex)*: the 64-character hex string (password field)
-4. Open the app on the watch. On first start it validates the secret, moves it into app-private
-   watch storage and **blanks the settings field**, so it is not shown again.
+4. Open the app on the watch. On first start it **blanks the settings field first**, then validates
+   the secret and moves it into app-private watch storage, so it is never shown again.
 
-To change accounts, enter a new secret; it overwrites the stored one.
+The order of the two fields does not matter: a secret entered before the ID is kept until the ID
+arrives. To change accounts, enter a new secret. If the new value is invalid, the watch shows
+"New secret rejected" for a few seconds and **keeps the previous working account**.
+
+A planned alternative, linking the account from the watch itself with the SMS code read from the
+watch notification, is described in [docs/provisioning-on-watch.md](docs/provisioning-on-watch.md).
 
 ## Using it
 
@@ -104,9 +112,23 @@ monkeyc -f monkey.jungle -d instinct3solar45mm -o bin/test.prg -y developer_key.
 monkeydo bin/test.prg instinct3solar45mm /t
 ```
 
-There are 12 deterministic tests: RFC 6238 vectors, the reference end-to-end OTP, payload format,
+There are 17 deterministic tests: RFC 6238 vectors, the reference end-to-end OTP, payload format,
 credential validation and redaction, QR matrix vs. Nayuki `qrcodegen` (v4 full matrix, v8 checksum),
-and the layout for each Instinct 3 model.
+the layout for each Instinct 3 model, and the settings import state machine (pair, secret before ID,
+typo keeps the working pair, invalid without a pair, ID change). Test-only constants are annotated
+`(:test)` and are not compiled into release builds.
+
+### Release
+
+```bash
+tools/release.sh ../keys/developer_key.der
+```
+
+It refuses a dirty tree, builds every product with `-r`, aborts if any settings default looks like a
+secret, and prints the commit, SDK and sha256 of each `.prg` for `docs/RELEASES.md`.
+
+`tools/build-personal.sh` (secret baked into the `.prg`) reads the vault through a pipe. The output
+contains your secret: delete it right after copying it to the watch.
 
 `tools/sim-e2e.sh <device>` builds with the public example account, runs it in the simulator,
 screenshots it (Windows) and decodes the QR with OpenCV.
@@ -142,8 +164,11 @@ screenshots it (Windows) and decodes the QR with OpenCV.
 
 ## Roadmap
 
-ZPG-00…12 done (real device + checkout on AMOLED 45 mm). Next: ZPG-13 release; Solar/AMOLED 50 field tests.
-A future phone-helper provisioning path (local only, no backend) can plug into `CredentialStore.save()`.
+ZPG-00…12 done (real device + checkout on AMOLED 45 mm). ZPG-13: release candidate `v1.0.0-rc1`
+(audit fixes, see [docs/AUDIT-2026-11-12.md](docs/AUDIT-2026-11-12.md)); becomes `v1.0.0` after a
+re-check on the watch at a checkout. Next: ZPG-14 on-watch account linking
+([docs/provisioning-on-watch.md](docs/provisioning-on-watch.md)), then Solar/AMOLED 50 field tests.
+Full plan: [docs/IMPROVEMENT-PLAN.md](docs/IMPROVEMENT-PLAN.md).
 
 ## License
 

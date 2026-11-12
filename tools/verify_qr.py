@@ -1,5 +1,5 @@
 # Decodes a simulator screenshot and compares with an independent TOTP (public example account only).
-import cv2,sys,hmac,hashlib,struct
+import cv2,sys,hmac,hashlib,struct  # run with python -I
 img=cv2.imread(sys.argv[1]); t=int(sys.argv[2])
 big=cv2.resize(img,None,fx=4,fy=4,interpolation=cv2.INTER_NEAREST)
 data,_,_=cv2.QRCodeDetector().detectAndDecode(big)
