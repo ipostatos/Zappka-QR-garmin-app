@@ -22,6 +22,9 @@ jobs:
       - name: No permissions, no secret-like values
         run: python -I tools/check-secrets.py
 
+      - name: No account baked into settings defaults
+        run: python -I tools/check-build.py --properties
+
   secret-scan:
     runs-on: ubuntu-latest
     permissions:
