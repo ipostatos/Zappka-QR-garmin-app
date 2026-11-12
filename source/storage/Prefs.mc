@@ -57,7 +57,7 @@ module Prefs {
             return;
         }
         var last = lastPhoneSeen();
-        if (last == null || now - (last as Number) >= PHONE_MARK_EVERY) {
+        if (last == null || now < (last as Number) || now - (last as Number) >= PHONE_MARK_EVERY) {
             Application.Storage.setValue(KEY_LAST_PHONE, now);
         }
     }
@@ -70,7 +70,8 @@ module Prefs {
     // True when the phone was seen before, but not for 24 h. Unknown is not stale.
     function phoneStale(now as Number) as Boolean {
         var last = lastPhoneSeen();
-        return last != null && now - (last as Number) > PHONE_STALE_SECONDS;
+        // Backward time jumps must also warn; otherwise a stale future timestamp hides drift.
+        return last != null && (now < (last as Number) || now - (last as Number) > PHONE_STALE_SECONDS);
     }
 
     // "now", "5 h ago", "3 d ago", or "never".
@@ -80,6 +81,9 @@ module Prefs {
             return "never";
         }
         var d = now - (last as Number);
+        if (d < 0) {
+            return "clock?";
+        }
         if (d < 3600) {
             return "now";
         }

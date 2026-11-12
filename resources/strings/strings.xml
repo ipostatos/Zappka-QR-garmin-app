@@ -10,6 +10,7 @@
     <string id="InvalidValue">Invalid value</string>
     <string id="NeedUserId">Secret saved\nNow add the\nuser ID</string>
     <string id="SecretRejected">New secret\nrejected\nOld account kept</string>
+    <string id="ClearFailed">Settings not cleared\nCheck Garmin\nConnect</string>
     <string id="MenuTitle">Zappka QR</string>
     <string id="MenuCheckout">Checkout mode</string>
     <string id="MenuCheckoutSub">Max light, 10 min</string>

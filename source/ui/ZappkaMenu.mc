@@ -71,18 +71,20 @@ class ZappkaSignOutDelegate extends WatchUi.ConfirmationDelegate {
 
     function onResponse(response as WatchUi.Confirm) as Boolean {
         if (response == WatchUi.CONFIRM_YES) {
-            CredentialStore.signOut();
+            var signedOut = CredentialStore.signOut();
             _view.reload();
-            var i = _menu.findItemById(:signout);
-            if (i >= 0) {
-                _menu.deleteItem(i);
+            if (signedOut) {
+                var i = _menu.findItemById(:signout);
+                if (i >= 0) {
+                    _menu.deleteItem(i);
+                }
             }
         }
         return true;
     }
 }
 
-// Confirmation of a staged one-field account change. YES applies it, NO or BACK keeps the
+// Confirmation of a staged account change. YES applies it, NO or BACK keeps the
 // working pair and puts the settings ID back.
 class ZappkaStagedDelegate extends WatchUi.ConfirmationDelegate {
     private var _view as ZappkaView;

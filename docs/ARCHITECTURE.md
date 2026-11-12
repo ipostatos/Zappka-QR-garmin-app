@@ -45,18 +45,25 @@ and 3 px fits only with a 0-module quiet zone. So 2 px with the full quiet zone 
 
 `CredentialStore.importFromSettings()` runs on start and on every settings change:
 
-1. If the secret field is not empty, it is **blanked first**, before any validation.
+1. Read both fields, then clear the secret field and verify an exactly empty string by reading it back.
+   Read/clear failures stop the import with `:clear_failed`; the working pair stays unchanged.
+   `CredentialProperties` is the SDK boundary used for failure injection in simulator tests.
 2. A secret without an ID is kept as *pending* in Storage until the ID arrives. It is never
    paired with the stored ID.
 3. Without a working pair, a valid pair is applied directly.
-4. With a working pair: both fields changed is a complete update and is applied; a change of
-   only one field is *staged* and the QR view asks for confirmation (YES applies, NO or BACK
+4. With a working pair: every change, including both fields together, is *staged*. The QR view
+   asks for confirmation (YES applies, NO or BACK
    keeps the working pair and puts the settings ID back). The working pair keeps producing
-   codes until then.
+   codes until then. Repeated settings callbacks preserve the staged secret; invalid new input
+   cancels an older staged candidate.
 5. Invalid input never replaces anything: with a working pair the watch shows "New secret
    rejected" once and the settings ID is put back; without one it shows "Invalid".
 
-Covered by `tests/CredentialStoreTest.mc` and `tests/AccountChangeTest.mc`.
+Covered by `tests/CredentialStoreTest.mc`, `tests/AccountChangeTest.mc` and
+`tests/OfflinePro12SafetyTest.mc`. Sign out verifies both Properties fields are empty
+before deleting Storage keys. This protects against Properties failures, not arbitrary
+Storage failures/power loss: multiple Storage keys are not an atomic transaction.
+Local readback cannot establish deletion from Garmin Connect caches or cloud logs.
 
 ## Menu and text screens
 

@@ -5,12 +5,11 @@ import Toybox.Lang;
 // on-watch storage and is the best available option. See README "Security model".
 //
 // Flow: user types id + secret into Garmin Connect app settings (Application.Properties).
-// On the next start / settings change the secret field is blanked FIRST (so it never syncs
-// back to the phone), then the input is checked against the stored pair.
+// On the next start / settings change the secret field is blanked and read back FIRST.
+// This does not prove that Garmin Connect or cloud caches erased previous values.
 //
 // Rules for a watch that already has a working pair:
-// - both fields changed            -> complete update, applied;
-// - only the secret or only the ID -> staged; applied only after a confirmation on the watch
+// - any changed field(s)          -> staged; applied only after a confirmation on the watch
 //   (a half-updated account must never silently replace a working one);
 // - a secret without an ID         -> kept as pending; never combined with the stored ID;
 // - invalid input                  -> ignored, working pair kept, reported once.
@@ -21,18 +20,26 @@ module CredentialStore {
     const KEY_USER = "u";
     const KEY_SECRET = "s";
     const KEY_PENDING = "ps";      // secret waiting for an id
-    const KEY_STAGED_USER = "su";  // one-field change waiting for confirmation on the watch
+    const KEY_STAGED_USER = "su";  // account change waiting for confirmation on the watch
     const KEY_STAGED_SECRET = "ss";
     const KEY_INVALID = "bad";     // last input invalid and no working pair exists
     const KEY_REJECTED = "rej";    // last input invalid, previous working pair kept
+    const KEY_CLEAR_FAILURE = "cf";  // secret could not be cleared from app settings
 
-    // Returns :none, :imported, :pending, :staged, :rejected or :invalid. Never logs values.
+    var properties as CredentialProperties = new CredentialProperties();
+
+    // Returns :none, :imported, :pending, :staged, :rejected, :invalid or :clear_failed.
+    // Never logs credential values or exception contents.
     function importFromSettings() as Symbol {
         var propId = readProp(PROP_USER);
         var propSecret = readProp(PROP_SECRET);
-        if (propSecret.length() > 0) {
-            blankSecretProp();
+        // Verify even an empty/whitespace field. Read failures must not look like empty input.
+        var cleared = blankSecretProp();
+        if (!cleared || propId == null || propSecret == null) {
+            Application.Storage.setValue(KEY_CLEAR_FAILURE, true);
+            return :clear_failed;
         }
+        Application.Storage.deleteValue(KEY_CLEAR_FAILURE);
 
         var storedId = Application.Storage.getValue(KEY_USER);
         var storedSecret = Application.Storage.getValue(KEY_SECRET);
@@ -42,6 +49,12 @@ module CredentialStore {
             (pending instanceof String ? pending as String : null);
 
         if (newSecret == null) {
+            // The secret field was already cleared when this pair was staged. An unchanged
+            // settings callback/restart must not replace its secret with the working secret.
+            if (propId.equals(stagedUserId())) {
+                return :staged;
+            }
+            clearStaged();
             // Only the ID field (or nothing) changed.
             if (propId.length() == 0 || propId.equals(storedId)) {
                 return :none;
@@ -53,6 +66,7 @@ module CredentialStore {
         }
 
         if (propId.length() == 0) {
+            clearStaged();
             // Never pair a new secret with the stored ID: wait for the ID.
             if (Hex.decode(newSecret) == null) {
                 return reject();
@@ -67,12 +81,12 @@ module CredentialStore {
         var idChanged = !propId.equals(storedId);
         var secretChanged = !newSecret.equals(storedSecret);
         if (!idChanged && !secretChanged) {
+            clearStaged();
             Application.Storage.deleteValue(KEY_PENDING);
             return :none;
         }
-        if (idChanged && secretChanged) {
-            return save(propId, newSecret);
-        }
+        // Confirmation is required for every change to a working account,
+        // including both fields changed together.
         return stageOrReject(propId, newSecret);
     }
 
@@ -86,7 +100,7 @@ module CredentialStore {
         return :staged;
     }
 
-    // ID of a staged one-field change, or null. The view asks the user to confirm it.
+    // ID of a staged account change, or null. The view asks the user to confirm it.
     function stagedUserId() as String or Null {
         var v = Application.Storage.getValue(KEY_STAGED_USER);
         return v instanceof String ? v as String : null;
@@ -95,9 +109,10 @@ module CredentialStore {
     function applyStaged() as Void {
         var id = stagedUserId();
         var secret = Application.Storage.getValue(KEY_STAGED_SECRET);
-        clearStaged();
         if (id != null && secret instanceof String) {
-            save(id, secret as String);
+            save(id, secret as String);  // save() clears staged data after validation
+        } else {
+            clearStaged();
         }
     }
 
@@ -123,6 +138,7 @@ module CredentialStore {
 
     // Invalid input: keep a working pair if there is one, otherwise report :invalid.
     function reject() as Symbol {
+        clearStaged();
         Application.Storage.deleteValue(KEY_PENDING);
         if (load()[0] == :ok) {
             Application.Storage.setValue(KEY_REJECTED, true);
@@ -153,6 +169,15 @@ module CredentialStore {
         return [:missing, null];
     }
 
+    // True once if an attempted secret-setting cleanup failed.
+    function consumeClearFailure() as Boolean {
+        if (Application.Storage.getValue(KEY_CLEAR_FAILURE) == true) {
+            Application.Storage.deleteValue(KEY_CLEAR_FAILURE);
+            return true;
+        }
+        return false;
+    }
+
     // True once after an invalid new secret was ignored in favour of the working pair.
     function consumeRejected() as Boolean {
         if (Application.Storage.getValue(KEY_REJECTED) == true) {
@@ -168,6 +193,7 @@ module CredentialStore {
         Application.Storage.deleteValue(KEY_PENDING);
         Application.Storage.deleteValue(KEY_INVALID);
         Application.Storage.deleteValue(KEY_REJECTED);
+        Application.Storage.deleteValue(KEY_CLEAR_FAILURE);
         clearStaged();
     }
 
@@ -177,19 +203,31 @@ module CredentialStore {
     }
 
     // Menu -> Sign out: forget the account on the watch and in the app settings.
-    function signOut() as Void {
-        clear();
-        try {
-            Application.Properties.setValue(PROP_USER, "");
-        } catch (e) {
+    function signOut() as Boolean {
+        // Do not forget a working account unless both settings are actually cleared.
+        if (!blankSecretProp()) {
+            Application.Storage.setValue(KEY_CLEAR_FAILURE, true);
+            return false;
         }
-        blankSecretProp();
+        try {
+            properties.setValue(PROP_USER, "");
+            var clearedId = properties.getValue(PROP_USER);
+            if (!(clearedId instanceof String) || !(clearedId as String).equals("")) {
+                Application.Storage.setValue(KEY_CLEAR_FAILURE, true);
+                return false;
+            }
+        } catch (e) {
+            Application.Storage.setValue(KEY_CLEAR_FAILURE, true);
+            return false;
+        }
+        clear();
+        return true;
     }
 
     function restoreIdProp() as Void {
         var id = Application.Storage.getValue(KEY_USER);
         try {
-            Application.Properties.setValue(PROP_USER, id instanceof String ? id : "");
+            properties.setValue(PROP_USER, id instanceof String ? id : "");
         } catch (e) {
         }
     }
@@ -198,25 +236,30 @@ module CredentialStore {
         return ZappkaCredentials.trim(s).toLower();
     }
 
-    // Never leave the secret in Properties. Retried once; failure must not abort the import.
-    function blankSecretProp() as Void {
-        try {
-            Application.Properties.setValue(PROP_SECRET, "");
-        } catch (e) {
+    // Verify the secret field is empty before accepting credentials or signing out.
+    // Does not guarantee the phone/Garmin cloud discarded historical synced values.
+    function blankSecretProp() as Boolean {
+        for (var attempt = 0; attempt < 2; attempt++) {
             try {
-                Application.Properties.setValue(PROP_SECRET, "");
-            } catch (e2) {
+                properties.setValue(PROP_SECRET, "");
+                var cleared = properties.getValue(PROP_SECRET);
+                if (cleared instanceof String && (cleared as String).equals("")) {
+                    return true;
+                }
+            } catch (e) {
+                // Retry once without logging exception contents.
             }
         }
+        return false;
     }
 
-    function readProp(key as String) as String {
+    function readProp(key as String) as String or Null {
         var v = null;
         try {
-            v = Application.Properties.getValue(key);
+            v = properties.getValue(key);
         } catch (e) {
             v = null;
         }
-        return v instanceof String ? ZappkaCredentials.trim(v) : "";
+        return v instanceof String ? ZappkaCredentials.trim(v) : null;
     }
 }

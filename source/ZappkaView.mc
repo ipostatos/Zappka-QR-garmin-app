@@ -11,6 +11,7 @@ import Toybox.WatchUi;
 class ZappkaView extends WatchUi.View {
     private var _state as Symbol = :missing;    // :ok, :missing, :pending, :invalid, :qrfail
     private var _noticeUntil as Number = 0;     // "new secret rejected" shown until this epoch second
+    private var _clearFailureUntil as Number = 0;  // app settings cleanup failed
     private var _creds as ZappkaCredentials or Null = null;
     private var _counter as Long = -1l;
     private var _qr as QrCode or Null = null;
@@ -20,6 +21,7 @@ class ZappkaView extends WatchUi.View {
     private var _sub as Graphics.BoundingBox or Null = null;
     private var _timer as Timer.Timer or Null = null;
     private var _openedAt as Number = 0;
+    private var _lastTickAt as Number = 0;
     private var _checkout as Boolean = false;   // START/SELECT toggles; max light, long timeout
 
     function initialize() {
@@ -34,6 +36,9 @@ class ZappkaView extends WatchUi.View {
         _creds = r[1];
         if (CredentialStore.consumeRejected()) {
             _noticeUntil = Time.now().value() + ZappkaProtocol.NOTICE_SECONDS;
+        }
+        if (CredentialStore.consumeClearFailure()) {
+            _clearFailureUntil = -1; // start the notice when this view is actually visible
         }
         _counter = -1l;
         _qr = null;
@@ -66,6 +71,7 @@ class ZappkaView extends WatchUi.View {
 
     function onShow() as Void {
         _openedAt = Time.now().value();
+        _lastTickAt = _openedAt;
         if (_timer == null) {
             _timer = new Timer.Timer();
         }
@@ -87,6 +93,7 @@ class ZappkaView extends WatchUi.View {
         }
         _checkout = on;
         _openedAt = Time.now().value();   // restart the auto-exit timer
+        _lastTickAt = _openedAt;
         lightOn();
         buzz(_checkout ? 60 : 30);
         WatchUi.requestUpdate();
@@ -127,6 +134,17 @@ class ZappkaView extends WatchUi.View {
         var now = Time.now().value();
         Prefs.notePhone(System.getDeviceSettings().phoneConnected, now);
         var limit = _checkout ? ZappkaProtocol.CHECKOUT_EXIT_SECONDS : Prefs.autoExitSeconds();
+        if (now < _lastTickAt) {
+            // Wall clock was set backward; restart auto-exit safely.
+            _openedAt = now;
+            if (_clearFailureUntil > 0) {
+                _clearFailureUntil = now + 8;
+            }
+            if (_noticeUntil > 0) {
+                _noticeUntil = now + ZappkaProtocol.NOTICE_SECONDS;
+            }
+        }
+        _lastTickAt = now;
         if (now - _openedAt > limit) {
             System.exit();
         }
@@ -137,7 +155,7 @@ class ZappkaView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
 
-    // A one-field account change (only the secret or only the ID) is applied only after the user
+    // Any account change (ID, secret, or both) is applied only after the user
     // confirms it here; until then the working pair keeps producing codes.
     private function askStagedChange() as Void {
         var id = CredentialStore.stagedUserId();
@@ -200,10 +218,19 @@ class ZappkaView extends WatchUi.View {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_WHITE);
         dc.clear();
 
+        if (_clearFailureUntil == -1) {
+            _clearFailureUntil = now + 8;
+        }
+        if (now < _clearFailureUntil) {
+            drawMessage(dc, WatchUi.loadResource(Rez.Strings.ClearFailed) as String);
+            return;
+        }
+        _clearFailureUntil = 0;
         if (now < _noticeUntil) {
             drawMessage(dc, WatchUi.loadResource(Rez.Strings.SecretRejected) as String);
             return;
         }
+        _noticeUntil = 0;
 
         if (_state == :ok && _qr != null && _layout != null) {
             var l = _layout as QrLayout;

@@ -6,6 +6,7 @@ import Toybox.Test;
 
 // helper, not a test (a (:test) annotation would make the runner call it)
 function resetStore() as Void {
+    CredentialStore.properties = new CredentialProperties();
     CredentialStore.clear();
     Application.Properties.setValue(CredentialStore.PROP_USER, "");
     Application.Properties.setValue(CredentialStore.PROP_SECRET, "");

@@ -35,8 +35,13 @@ function phoneStaleAfterADay(logger as Logger) as Boolean {
     Test.assert(!Prefs.phoneStale(t + 86400));
     Test.assert(Prefs.phoneStale(t + 86401));
     Test.assertEqual(Prefs.phoneAgo(t + 3 * 86400), "3 d ago");
+    Test.assert(Prefs.phoneStale(t - 3600));
+    Test.assertEqual(Prefs.phoneAgo(t - 3600), "clock?");
     Prefs.notePhone(true, t + 30);                      // within a minute: no write
     Test.assertEqual(Prefs.lastPhoneSeen(), t);
+    Prefs.notePhone(true, t - 3600);
+    Test.assertEqual(Prefs.lastPhoneSeen(), t - 3600);
+    Test.assert(!Prefs.phoneStale(t - 3600));
     Application.Storage.deleteValue(Prefs.KEY_LAST_PHONE);
     return true;
 }

@@ -10,6 +10,7 @@
     <string id="InvalidValue">Nieprawidłowa wartość</string>
     <string id="NeedUserId">Sekret zapisany\nTeraz dodaj\nID użytkownika</string>
     <string id="SecretRejected">Nowy sekret\nodrzucony\nStare konto działa</string>
+    <string id="ClearFailed">Nie wyczyszczono\nustawień w\nGarmin Connect</string>
     <string id="MenuTitle">Zappka QR</string>
     <string id="MenuCheckout">Tryb kasy</string>
     <string id="MenuCheckoutSub">Max jasność, 10 min</string>

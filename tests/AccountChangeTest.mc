@@ -3,8 +3,8 @@ import Toybox.Lang;
 import Toybox.Test;
 
 // Account changes must never silently replace a working pair with a half-updated one.
-// A change of only one field (secret or ID) is staged and applied only after a confirmation
-// on the watch; a change of both fields is a complete update and is applied directly.
+// Every change to a working account is staged and applied only after confirmation
+// on the watch, including a change of both fields.
 
 (:test)
 const OTHER_ID = "987654321098";
@@ -49,7 +49,9 @@ function newSecretWithEmptyIdNeverUsesStoredId(logger as Logger) as Boolean {
     Test.assertEqual(enterSettings("", otherSecret()), :pending);
     Test.assertEqual(storedPair(), before);
     Test.assertEqual(CredentialStore.load()[0], :ok);                     // QR keeps working
-    Test.assertEqual(enterSettings(OTHER_ID, ""), :imported);             // ID arrives: both new
+    Test.assertEqual(enterSettings(OTHER_ID, ""), :staged);             // ID arrives: confirm
+    Test.assertEqual(storedPair(), before);
+    CredentialStore.applyStaged();
     Test.assertEqual(storedPair(), OTHER_ID + ":" + otherSecret());
     resetStore();
     return true;
@@ -72,10 +74,16 @@ function newIdWithOldSecretIsStagedNotApplied(logger as Logger) as Boolean {
 }
 
 (:test)
-function bothFieldsChangedIsAppliedDirectly(logger as Logger) as Boolean {
+function bothFieldsChangedRequiresConfirmation(logger as Logger) as Boolean {
     resetStore();
     enterSettings(EXAMPLE_ID, EXAMPLE_SECRET);
-    Test.assertEqual(enterSettings(OTHER_ID, otherSecret()), :imported);
+    var before = storedPair();
+    Test.assertEqual(enterSettings(OTHER_ID, otherSecret()), :staged);
+    Test.assertEqual(storedPair(), before);
+    CredentialStore.discardStaged();
+    Test.assertEqual(storedPair(), before);
+    Test.assertEqual(enterSettings(OTHER_ID, otherSecret()), :staged);
+    CredentialStore.applyStaged();
     Test.assertEqual(storedPair(), OTHER_ID + ":" + otherSecret());
     resetStore();
     return true;
@@ -100,6 +108,35 @@ function invalidIdIsReportedOnceNotOnEveryStart(logger as Logger) as Boolean {
     Test.assertEqual(Application.Properties.getValue(CredentialStore.PROP_USER), EXAMPLE_ID);
     Test.assertEqual(CredentialStore.importFromSettings(), :none);       // next start: no notice
     Test.assert(!CredentialStore.consumeRejected());
+    resetStore();
+    return true;
+}
+
+(:test)
+function stagedPairSurvivesRepeatedSettingsImport(logger as Logger) as Boolean {
+    resetStore();
+    enterSettings(EXAMPLE_ID, EXAMPLE_SECRET);
+    var before = storedPair();
+    Test.assertEqual(enterSettings(OTHER_ID, otherSecret()), :staged);
+    Test.assertEqual(CredentialStore.importFromSettings(), :staged);
+    Test.assertEqual(CredentialStore.importFromSettings(), :staged);
+    Test.assertEqual(storedPair(), before);
+    CredentialStore.applyStaged();
+    Test.assertEqual(storedPair(), OTHER_ID + ":" + otherSecret());
+    resetStore();
+    return true;
+}
+
+(:test)
+function invalidInputCancelsPreviousStagedPair(logger as Logger) as Boolean {
+    resetStore();
+    enterSettings(EXAMPLE_ID, EXAMPLE_SECRET);
+    var before = storedPair();
+    enterSettings(OTHER_ID, otherSecret());
+    Test.assertEqual(enterSettings("bad", "invalid"), :rejected);
+    Test.assert(CredentialStore.stagedUserId() == null);
+    CredentialStore.applyStaged();
+    Test.assertEqual(storedPair(), before);
     resetStore();
     return true;
 }

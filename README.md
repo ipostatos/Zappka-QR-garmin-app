@@ -101,7 +101,7 @@ points are credited, and a code scanned in the **last seconds** of its 30-second
 <tr>
 <td valign="top">
 
-<img src="docs/assets/icons/key.svg" width="20" alt=""> **Safe account changes** — the settings field is blanked first, the secret goes to app-private storage; a typo or a half-updated account never replaces a working one without confirmation on the watch.
+<img src="docs/assets/icons/key.svg" width="20" alt=""> **Safe account changes** — the settings field is blanked first, the secret goes to app-private storage; invalid input keeps the working account; every account change needs confirmation on the watch.
 
 </td>
 <td valign="top">
@@ -134,7 +134,7 @@ Press **MENU** on the QR screen.
 | **Buzz on new code** | on/off: short vibration every 30 s when the code changes; remembered |
 | **Auto-exit** | 1, 3 or 5 minutes before the app closes itself; remembered |
 | **Status** | masked ID, UTC time of the watch, seconds to the next code, when the phone was last seen: quick clock check |
-| **Sign out** | asks for confirmation, then deletes the account from the watch and clears the app settings |
+| **Sign out** | asks for confirmation, verifies settings cleanup, then deletes the account from the watch |
 | **About** | version, MIT license, unofficial-app note |
 
 ## Screenshots

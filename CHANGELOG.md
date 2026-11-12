@@ -3,6 +3,33 @@
 All notable changes to this project are documented here. This project loosely
 follows [Semantic Versioning](https://semver.org/).
 
+## Unreleased — every account change needs confirmation
+
+### Changed
+- **Every change to a working account needs YES on the watch**, including a new ID and a new
+  secret entered together. Before, a complete pair replaced the stored one without asking.
+  Until YES the old account keeps producing codes; NO or BACK keeps it and puts the settings
+  ID back. A repeated settings callback or restart no longer swaps the staged secret for the
+  working one; invalid new input cancels an older staged candidate.
+- **Sign out** clears both settings fields in Garmin Connect and reads them back before the
+  account is deleted from the watch. If that fails, the account stays and the watch shows
+  *Settings not cleared / Check Garmin Connect* once.
+
+### Fixed
+- The secret field is cleared and read back on every import, even when it looks empty. A
+  read or clear failure stops the import and keeps the working pair instead of being treated
+  as empty input.
+- A clock set backward no longer leaves a stale "phone seen" time in the future: the countdown
+  warns, *Status* shows `clock?`, and the auto-exit timer restarts.
+
+### Added
+- `CredentialProperties`: the small SDK boundary that tests use to inject read and write
+  failures without real secrets. 10 tests (46 in total), all run in the simulator on the
+  three devices.
+- `tools/release.sh` works with Linux `monkeyc` and Windows `monkeyc.bat`, checks the key file
+  and records the compiler version. An optional CI workflow template lives in `tools/ci/`
+  and is inert until moved into `.github/workflows`.
+
 ## v1.1.0-rc3 — clock hint, auto-exit choice
 
 ### Added
