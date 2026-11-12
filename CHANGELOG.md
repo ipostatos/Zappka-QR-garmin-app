@@ -3,6 +3,26 @@
 All notable changes to this project are documented here. This project loosely
 follows [Semantic Versioning](https://semver.org/).
 
+## v1.1.0-rc1 — watch menu
+
+### Added
+- **MENU** opens a menu: *Checkout mode* and *Buzz on new code* toggles, *Status* (masked ID, UTC
+  time, seconds to the next code), *Sign out* with confirmation, *About* (version, MIT license,
+  unofficial-app note).
+- **Sign out** deletes the account from the watch and clears both settings fields, so nothing
+  returns on the next sync.
+- Tests: sign out, preferences, version format, and a layout test that measures every text
+  screen with the watch font on each device (EN and PL). 26 tests in total.
+
+### Fixed
+- **Instinct 3 Solar:** the *Setup required* text and the old info screen were wider than the
+  octagon or ran into the subscreen. Messages are now compact and start below the subscreen.
+
+## v1.0.0 — in daily use
+
+Same code as `v1.0.0-rc1`. Tagged after weeks of daily use at Żabka checkouts on Instinct 3
+AMOLED 45: codes accepted, points credited, last seconds of a step accepted, buzz on every new code.
+
 ## v1.0.0-rc1 — settings import, release provenance
 
 ### Changed

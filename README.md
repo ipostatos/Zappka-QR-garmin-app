@@ -9,17 +9,18 @@
 </p>
 
 <p align="center">
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/Garmin%20app-v1.0%20rc1-007CC3?style=flat-square&logo=garmin&logoColor=white" alt="Garmin app v1.0 rc1"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/Garmin%20app-v1.1%20rc1-007CC3?style=flat-square&logo=garmin&logoColor=white" alt="Garmin app v1.1 rc1"></a>
   <img src="https://img.shields.io/badge/Connect%20IQ-Monkey%20C-111?style=flat-square" alt="Connect IQ, Monkey C">
   <img src="https://img.shields.io/badge/permissions-none-16a34a?style=flat-square" alt="No permissions">
   <img src="https://img.shields.io/badge/network-offline-16a34a?style=flat-square" alt="Offline">
-  <img src="https://img.shields.io/badge/tests-17%20passing-16a34a?style=flat-square" alt="17 tests passing">
+  <img src="https://img.shields.io/badge/tests-26%20passing-16a34a?style=flat-square" alt="26 tests passing">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-555?style=flat-square" alt="MIT license"></a>
 </p>
 
 <p align="center">
   <a href="#how-it-works">How it works</a> ·
   <a href="#features">Features</a> ·
+  <a href="#watch-menu">Menu</a> ·
   <a href="#screenshots">Screenshots</a> ·
   <a href="docs/WATCH_SETUP.md">Watch setup</a> ·
   <a href="docs/PROTOCOL.md">Protocol notes</a> ·
@@ -62,6 +63,7 @@ points are credited, and a code scanned in the **last seconds** of its 30-second
 4. In the last 2 seconds the countdown turns **inverted**. The code is *not* switched early:
    field use shows that even the last seconds are accepted.
 5. Waiting in line? **START** turns on checkout mode: full brightness and a 10-minute timeout.
+6. **MENU** opens the watch menu: checkout mode, buzz on/off, status, sign out, about.
 
 </td>
 </tr>
@@ -106,7 +108,31 @@ points are credited, and a code scanned in the **last seconds** of its 30-second
 
 </td>
 </tr>
+<tr>
+<td valign="top">
+
+<img src="docs/assets/icons/menu.svg" width="20" alt=""> **Watch menu** — checkout mode, buzz on new code, status with a clock check, sign out with confirmation, about with version and license.
+
+</td>
+<td valign="top">
+
+<img src="docs/assets/icons/ruler.svg" width="20" alt=""> **Fits every screen** — tests measure each text screen with the watch font against the round AMOLED and the Solar octagon and subscreen.
+
+</td>
+</tr>
 </table>
+
+## Watch menu
+
+Press **MENU** on the QR screen.
+
+| Item | What it does |
+|---|---|
+| **Checkout mode** | on/off: maximum backlight, 10-minute timeout (same as **START**) |
+| **Buzz on new code** | on/off: short vibration every 30 s when the code changes; remembered |
+| **Status** | masked ID, UTC time of the watch, seconds to the next code: quick clock check |
+| **Sign out** | asks for confirmation, then deletes the account from the watch and clears the app settings |
+| **About** | version, MIT license, unofficial-app note |
 
 ## Screenshots
 
@@ -116,7 +142,7 @@ independent Python TOTP.
 
 | Instinct 3 AMOLED 45 mm | Instinct 3 Solar 45 mm | First start |
 |---|---|---|
-| <img src="docs/screenshots/qr-amoled45.png" width="220" alt="AMOLED: QR with 29 s countdown"> | <img src="docs/screenshots/qr-solar45.png" width="220" alt="Solar: QR with countdown in the subscreen"> | <img src="docs/screenshots/setup-required.png" width="220" alt="Setup required screen"> |
+| <img src="docs/screenshots/qr-amoled45.png" width="220" alt="AMOLED: QR with 29 s countdown"> | <img src="docs/screenshots/qr-solar45.png" width="220" alt="Solar: QR with countdown in the subscreen"> | <img src="docs/screenshots/setup-required.png" width="220" alt="Setup required: add account in Garmin Connect"> |
 | 6 px modules, countdown below | 2 px modules, countdown in the subscreen | Before account data is entered |
 
 ## Watch setup
@@ -174,10 +200,11 @@ source/
 ├── ZappkaApp.mc ZappkaView.mc ZappkaDelegate.mc   app, QR view, buttons
 ├── crypto/        Hex, TotpGenerator (RFC 6238 + own RFC 2104 HMAC)
 ├── qr/            QrEncoder (byte mode, v1–10, ECC L/M), QrRenderer (layout, bitmap)
-├── storage/       CredentialStore (settings import state machine)
-├── ui/            CountdownRenderer, ZappkaGlanceView
+├── storage/       CredentialStore (settings import, sign out), Prefs (menu settings)
+├── ui/            ZappkaMenu (menu, sign out, about), TextScreen, CountdownRenderer, ZappkaGlanceView
 └── zappka/        ZappkaProtocol (all constants), ZappkaCredentials, ZappkaPayload
-tests/             17 simulator tests: RFC vectors, payload, QR vs. Nayuki, layout, settings import
+tests/             26 simulator tests: RFC vectors, payload, QR vs. Nayuki, layout, settings import,
+                   menu actions, every text screen fits the screen (EN and PL)
 resources/         strings (EN), settings, icon        resources-pol/  strings (PL)
 tools/             release.sh, screenshots.ps1, sim-e2e.sh, build-personal.sh, vault.ps1, check-secrets.py
 docs/              ARCHITECTURE, PROTOCOL, WATCH_SETUP, ON_WATCH_LINKING, ROADMAP, RELEASES, assets/
@@ -206,8 +233,9 @@ Details: [`THREAT_MODEL.md`](THREAT_MODEL.md). Reporting: [`SECURITY.md`](SECURI
 
 ## Roadmap
 
-- **v1.0 — current.** Offline QR, checkout mode, settings import that never loses a working account, release provenance.
-- **v1.1 — next.** Link the account from the watch itself: the SMS code shows up as a watch notification and is entered with the buttons, no computer needed ([`docs/ON_WATCH_LINKING.md`](docs/ON_WATCH_LINKING.md)).
+- **v1.0 — released.** Offline QR, checkout mode, settings import that never loses a working account, release provenance.
+- **v1.1 — current (rc1).** Watch menu: checkout mode, buzz toggle, status, sign out, about. Compact text screens that fit Solar.
+- **v1.2 — next.** Link the account from the watch itself: the SMS code shows up as a watch notification and is entered with the buttons, no computer needed ([`docs/ON_WATCH_LINKING.md`](docs/ON_WATCH_LINKING.md)).
 - Field tests on Solar 45 and AMOLED 50.
 
 Full list: [`docs/ROADMAP.md`](docs/ROADMAP.md) · changes: [`CHANGELOG.md`](CHANGELOG.md).

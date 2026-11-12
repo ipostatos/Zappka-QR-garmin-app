@@ -11,9 +11,16 @@
 - [x] Settings import never loses a working account; secret before ID is kept
 - [x] Test-only data excluded from release builds
 - [x] Release script with commit, SDK and sha256 per device
-- [ ] Re-check `v1.0.0-rc1` at a checkout, then tag `v1.0.0`
+- [x] In daily use at checkouts: tagged `v1.0.0`
 
-## v1.1 — next: link from the watch
+## v1.1 — current: watch menu
+
+- [x] MENU: checkout mode, buzz on new code, status (clock check), sign out with confirmation, about (version, license)
+- [x] Compact message screens that fit the Instinct 3 Solar octagon and subscreen
+- [x] Tests: sign out, preferences, every text screen fits the screen (EN and PL)
+- [ ] Check the menu on the watch, then tag `v1.1.0`
+
+## v1.2 — next: link from the watch
 
 - [ ] Spike on the real watch: sign-in requests through Garmin Connect Mobile
 - [ ] Separate Link build with `Communications`; main build stays permission-free

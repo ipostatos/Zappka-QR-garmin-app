@@ -1,4 +1,4 @@
-# On-watch account linking (planned, v1.1)
+# On-watch account linking (planned, v1.2)
 
 Goal: link the Żappka account **from the watch itself**, with no computer and no script.
 

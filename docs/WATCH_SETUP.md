@@ -48,7 +48,7 @@ The order of the two fields does not matter: a secret entered before the ID wait
 |---|---|
 | open from glance | QR is on the screen |
 | **START** | checkout mode on/off: maximum backlight, 10 min timeout |
-| **MENU** | info: masked ID, key length, UTC time |
+| **MENU** | menu: checkout mode, buzz on new code, status, sign out, about |
 | **BACK** | exit (the app also closes itself after 3 min) |
 
 A new code appears every 30 seconds with a short buzz. In the last 2 seconds the countdown is
@@ -58,13 +58,18 @@ inverted; the code is still valid.
 
 | Screen / symptom | Cause | Fix |
 |---|---|---|
-| *Setup required* | no account on the watch | step 3, then sync the watch |
-| *Secret saved. Now enter your Zappka user ID* | secret entered without the ID | enter the ID in Garmin Connect |
-| *Invalid Zappka configuration* | ID not digits, or secret not 64 hex characters, and no working account | re-enter both values |
-| *New secret rejected* (4 s, then the QR) | the new value was invalid | the previous account still works; re-enter the new value if you meant to change it |
-| Checkout does not accept the code | watch clock drifted or the secret was re-issued | sync the watch with the phone; MENU shows UTC time; get the secret again (step 1) |
+| *Setup required. Add account in Garmin Connect* | no account on the watch | step 3, then sync the watch |
+| *Secret saved. Now add the user ID* | secret entered without the ID | enter the ID in Garmin Connect |
+| *Invalid account. Check ID and secret* | ID not digits, or secret not 64 hex characters, and no working account | re-enter both values |
+| *New secret rejected. Old account kept* (4 s, then the QR) | the new value was invalid | the previous account still works; re-enter the new value if you meant to change it |
+| Checkout does not accept the code | watch clock drifted or the secret was re-issued | sync the watch with the phone; **MENU → Status** shows UTC time; get the secret again (step 1) |
 | Scanner does not see the code | low brightness | press START for checkout mode |
 
 ## Changing the account
 
 Enter a new secret (and ID) in Garmin Connect. A valid pair replaces the stored one.
+
+## Signing out
+
+**MENU → Sign out → confirm.** The account is deleted from the watch and both settings fields are
+cleared, so nothing comes back on the next sync. The QR screen then shows *Setup required*.

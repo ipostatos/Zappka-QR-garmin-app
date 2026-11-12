@@ -52,6 +52,15 @@ and 3 px fits only with a 0-module quiet zone. So 2 px with the full quiet zone 
 
 Covered by `tests/CredentialStoreTest.mc`.
 
+## Menu and text screens
+
+- `ZappkaMenu` builds a native `Menu2` (system-rendered on every device): two toggles, status,
+  sign out (native `Confirmation`; the item is removed from the open menu after sign out) and about.
+- `Prefs` keeps menu settings in Storage (buzz on new code, default on).
+- `TextScreen` draws About, Status and the QR-screen messages. On a device with a subscreen the
+  text block starts below it. `tests/TextScreenTest.mc` measures every line with the watch font
+  and checks it lies inside the visible screen shape and clear of the subscreen.
+
 ## Builds
 
 | Jungle | Purpose |
