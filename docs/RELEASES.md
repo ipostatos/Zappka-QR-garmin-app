@@ -46,4 +46,16 @@ commit `7de345e`, SDK `connectiq-sdk-win-9.1.0-2026-03-09-6a872a80b`. Every buil
 | instinct3amoled45mm | `90f44f0eb686751b06d371eb08d7d66030b1df43f43083fb486034928da34ef6` | 30060 |
 | instinct3amoled50mm | `90f44f0eb686751b06d371eb08d7d66030b1df43f43083fb486034928da34ef6` | 30060 |
 
-Status: 33/33 simulator tests on all three devices. Menu and account-change confirmation to be checked on the watch before `v1.1.0`.
+Status: 33/33 simulator tests on all three devices. Superseded by rc3.
+
+## v1.1.0-rc3
+
+commit `14fe52e`, SDK `connectiq-sdk-win-9.1.0-2026-03-09-6a872a80b`. Every build passed `tools/check-build.py`.
+
+| device | sha256 | bytes |
+|---|---|---|
+| instinct3solar45mm | `b7d6f814a0f265ac39c37ce12413d387964cc508d4a206e989b0da5ca60fa5f3` | 24828 |
+| instinct3amoled45mm | `c1363546a3f37f85e6b106d9e6f0056ae9ba683f4711c1dbe2d6ec118486e332` | 31036 |
+| instinct3amoled50mm | `c1363546a3f37f85e6b106d9e6f0056ae9ba683f4711c1dbe2d6ec118486e332` | 31036 |
+
+Status: 36/36 simulator tests on all three devices. Menu, account-change confirmation and auto-exit to be checked on the watch before `v1.1.0`.
