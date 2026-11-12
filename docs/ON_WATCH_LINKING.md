@@ -47,6 +47,24 @@ Does Garmin Connect Mobile pass the request headers the sign-in API expects, on 
 The simulator sends requests from the computer and cannot answer this. A one-evening spike on the
 real watch decides: if it passes, build v1.1; if not, the fallback is an Android companion app.
 
+## Points balance (proposed)
+
+Goal: see on the watch that the points of a purchase were credited. The official app sends no
+push notification for this, so the watch cannot simply show one.
+
+- **Where:** a *Points* item in the menu of the Link build, fetched on demand. Not under the QR:
+  there is no room on Instinct 3 Solar, and points arrive after the payment, not while scanning.
+- **What it needs:** network (the Link build has it) and a signed-in session. A session lasts
+  about an hour, so showing points later means keeping a **long-lived refresh token** on the
+  watch. That token is far more powerful than the loyalty secret: it opens the whole account.
+  `Application.Storage` is not encrypted by the app.
+- **Unknown:** which sign-in API request returns the balance. The reference projects do not
+  read it.
+- **Rules if built:** token only in the Link build, wiped by *Sign out*, never logged; the main
+  build keeps zero permissions and no token.
+
+**Decision pending:** whether a long-lived account token on the watch is acceptable for this.
+
 ## Phone settings for SMS on the watch
 
 - Android: Garmin Connect has notification access; smart notifications are on for Messages.
