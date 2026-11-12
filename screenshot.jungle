@@ -1,0 +1,6 @@
+# Simulator screenshots only: same sources, no glance, so the app opens straight on the QR view.
+# Used by tools/screenshots.sh with the public example account. Never for releases.
+project.manifest = manifest.xml
+base.sourcePath = source
+base.lang.pol = resources-pol
+base.excludeAnnotations = glanceentry

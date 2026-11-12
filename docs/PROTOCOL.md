@@ -1,4 +1,4 @@
-# Żappka dynamic QR — protocol notes (ZPG-00)
+# Żappka dynamic QR: protocol notes
 
 Status as of **2026-10-02**. Żabka publishes no official documentation for this. Everything below
 comes from independent reverse-engineered clients, cross-checked against each other and against
@@ -37,10 +37,12 @@ The two implementations are independent (C vs. JS/Python) and agree byte-for-byt
   levels (H in ZappkaQR, Q in the web app), and a QR decoder handles any valid level/mask.
 - The payload is not checked as a URL by the checkout, only parsed for `ploy` and `loyal`.
 
-## FIELD-CONFIRMED (2026-10-08)
+## FIELD-CONFIRMED (2026-10-08 → 2026-11)
 
-- The watch-generated QR is accepted at a real Żabka checkout and loyalty points are credited.
-- A code scanned 3–4 s before its step ends is still accepted.
+- The watch-generated QR is accepted at real Żabka checkouts and loyalty points are credited
+  (daily use on Instinct 3 AMOLED 45 mm since 2026-10-08).
+- A code scanned in the **last seconds** of its step is still accepted.
+- The buzz on every new code works on the real watch.
 
 ## UNKNOWN
 
@@ -62,5 +64,5 @@ The two implementations are independent (C vs. JS/Python) and agree byte-for-byt
 | QR matrix vs. Project Nayuki `qrcodegen` (v4-M mask 0, full matrix; v8-M mask 5, checksum) | bit-identical |
 | Simulator screen → OpenCV decode → compare with independent Python TOTP | match on Instinct 3 Solar 45, AMOLED 45, AMOLED 50 |
 | QR rotation across a 30 s boundary in the simulator | new code shown, no watchdog error |
-| Real Żabka checkout (Instinct 3 AMOLED 45 mm, owner's account, 2026-10-08) | **accepted, points credited** |
-| Code scanned with only 3–4 s of its 30 s left | **accepted** |
+| Real Żabka checkouts (Instinct 3 AMOLED 45 mm, owner's account, since 2026-10-08) | **accepted, points credited** |
+| Code scanned in the last seconds of its 30 s step | **accepted** |

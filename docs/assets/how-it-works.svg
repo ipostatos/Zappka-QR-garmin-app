@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="230" viewBox="0 0 1200 230" role="img" aria-labelledby="ht hd" font-family="Segoe UI, Roboto, Arial, sans-serif">
+  <title id="ht">How Zappka QR works</title>
+  <desc id="hd">Account data is entered once, kept in watch storage, a TOTP code is computed every 30 seconds and shown as a QR code at the checkout.</desc>
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8aa397"/></marker></defs>
+  <rect width="1200" height="230" rx="18" fill="#f5f7fa"/>
+
+  <g transform="translate(20,50)">
+    <rect width="260" height="120" rx="14" fill="#ffffff" stroke="#d6dde3"/>
+    <g transform="translate(18,20) scale(1.3)" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"/></g>
+    <text x="60" y="40" font-size="17" font-weight="700" fill="#1a1a1a">Account, once</text>
+    <text x="18" y="76" font-size="13" fill="#555">User ID + secret, entered in</text>
+    <text x="18" y="96" font-size="13" fill="#555">Garmin Connect settings.</text>
+  </g>
+  <path d="M282 110H318" stroke="#8aa397" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="300" y="80" text-anchor="middle" font-size="11" fill="#6b8577">sync</text>
+
+  <g transform="translate(320,50)">
+    <rect width="260" height="120" rx="14" fill="#ffffff" stroke="#d6dde3"/>
+    <g transform="translate(18,20) scale(1.3)" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/><path d="M12 15v2"/></g>
+    <text x="60" y="40" font-size="17" font-weight="700" fill="#1a1a1a">Watch storage</text>
+    <text x="18" y="76" font-size="13" fill="#555">Field blanked first, secret</text>
+    <text x="18" y="96" font-size="13" fill="#555">kept app-private on the watch.</text>
+  </g>
+  <path d="M582 110H618" stroke="#8aa397" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="600" y="80" text-anchor="middle" font-size="11" fill="#6b8577">every 30 s</text>
+
+  <g transform="translate(620,50)">
+    <rect width="260" height="120" rx="14" fill="#ffffff" stroke="#d6dde3"/>
+    <g transform="translate(18,20) scale(1.3)" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g>
+    <text x="60" y="40" font-size="17" font-weight="700" fill="#1a1a1a">TOTP on the wrist</text>
+    <text x="18" y="76" font-size="13" fill="#555">RFC 6238, HMAC-SHA1, 6 digits.</text>
+    <text x="18" y="96" font-size="13" fill="#555">UTC watch clock, no network.</text>
+  </g>
+  <path d="M882 110H918" stroke="#8aa397" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="900" y="80" text-anchor="middle" font-size="11" fill="#6b8577">encode</text>
+
+  <g transform="translate(920,50)">
+    <rect width="260" height="120" rx="14" fill="#ffffff" stroke="#d6dde3"/>
+    <g transform="translate(18,20) scale(1.3)" fill="none" stroke="#16a34a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM17 20h4v-3"/></g>
+    <text x="60" y="40" font-size="17" font-weight="700" fill="#1a1a1a">QR at the checkout</text>
+    <text x="18" y="76" font-size="13" fill="#555">33×33, pixel-exact, quiet zone.</text>
+    <text x="18" y="96" font-size="13" fill="#555">Buzz on every new code.</text>
+  </g>
+</svg>

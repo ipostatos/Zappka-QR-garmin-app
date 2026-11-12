@@ -21,7 +21,8 @@ class ZappkaApp extends Application.AppBase {
     }
 
     // Glance in the widget loop: one press from the watch face opens the QR.
-    (:glance)
+    // :glanceentry lets screenshot.jungle drop the glance so the simulator opens the QR view directly.
+    (:glance :glanceentry)
     function getGlanceView() as [WatchUi.GlanceView] or [WatchUi.GlanceView, WatchUi.GlanceViewDelegate] or Null {
         return [new ZappkaGlanceView()];
     }

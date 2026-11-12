@@ -1,0 +1,18 @@
+# gitleaks config — secret scanning for Zappka QR.
+# Extends the built-in default ruleset; only allowlists the PUBLIC example account from the
+# reference project, used by tests, tools and docs. Real account data never enters the repo.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public example account and build hashes"
+
+regexes = [
+  '''2db76449a55d59f1f9420b809edb1beb19dfa434ddb5dbf331f01aec35956e35''',
+]
+
+paths = [
+  # sha256 of release builds, not secrets
+  '''docs/RELEASES\.md$''',
+]

@@ -1,4 +1,4 @@
-# Design, feasibility & sizing (first deliverable)
+# Architecture, feasibility and sizing
 
 ## Connect IQ feasibility
 | Need | API | Verified |
@@ -41,7 +41,20 @@ Pixel pitch is an estimate from nominal display diameters (verify on device).
 Solar alternatives evaluated by brute force on the real simulator mask: 4 px does not fit at all,
 and 3 px fits only with a 0-module quiet zone. So 2 px with the full quiet zone is the best compliant option.
 
-## Roadmap
-ZPG-00 ✅ protocol · 01 ✅ skeleton · 02 ✅ TOTP · 03 ✅ payload · 04 ✅ QR · 05 ✅ renderer ·
-06 ✅ storage · 07 ✅ countdown/rotation · 08 ✅ Solar (sim) · 09 ✅ AMOLED (sim) · 10 ✅ sim tests ·
-11 ✅ physical device (AMOLED 45) · 12 ✅ checkout · 13 ⏳ release
+## Settings import
+
+`CredentialStore.importFromSettings()` runs on start and on every settings change:
+
+1. If the secret field is not empty, it is **blanked first**, before any validation.
+2. A secret without an ID is kept as *pending* in Storage until the ID arrives.
+3. A valid pair replaces the stored one. An invalid one never does: with a working pair the
+   watch shows "New secret rejected" for 4 s and keeps it; without one it shows "Invalid".
+
+Covered by `tests/CredentialStoreTest.mc`.
+
+## Builds
+
+| Jungle | Purpose |
+|---|---|
+| `monkey.jungle` | release and tests (`-t`) |
+| `screenshot.jungle` | simulator screenshots only: drops the glance (`:glanceentry`) so the QR view opens directly |

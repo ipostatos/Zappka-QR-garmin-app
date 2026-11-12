@@ -1,175 +1,217 @@
-# Zappka QR for Garmin (unofficial)
+<p align="center">
+  <img src="docs/assets/hero.png" width="100%" alt="Zappka QR: your Żappka loyalty code on a Garmin Instinct 3, offline">
+</p>
 
-An offline Garmin Connect IQ watch app that shows **your own** Żappka dynamic loyalty QR code.
+<p align="center">
+  <b>Your Żappka loyalty QR code on a Garmin watch.</b><br>
+  Computed on the wrist every 30 seconds, offline, with no phone link at runtime<br>
+  and not a single Connect IQ permission.
+</p>
 
-> **Independent, unofficial project.** It is not affiliated with, endorsed by or connected to Żabka
+<p align="center">
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/Garmin%20app-v1.0%20rc1-007CC3?style=flat-square&logo=garmin&logoColor=white" alt="Garmin app v1.0 rc1"></a>
+  <img src="https://img.shields.io/badge/Connect%20IQ-Monkey%20C-111?style=flat-square" alt="Connect IQ, Monkey C">
+  <img src="https://img.shields.io/badge/permissions-none-16a34a?style=flat-square" alt="No permissions">
+  <img src="https://img.shields.io/badge/network-offline-16a34a?style=flat-square" alt="Offline">
+  <img src="https://img.shields.io/badge/tests-17%20passing-16a34a?style=flat-square" alt="17 tests passing">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-555?style=flat-square" alt="MIT license"></a>
+</p>
+
+<p align="center">
+  <a href="#how-it-works">How it works</a> ·
+  <a href="#features">Features</a> ·
+  <a href="#screenshots">Screenshots</a> ·
+  <a href="docs/WATCH_SETUP.md">Watch setup</a> ·
+  <a href="docs/PROTOCOL.md">Protocol notes</a> ·
+  <a href="#build">Build</a>
+</p>
+
+> **Independent, unofficial project.** Not affiliated with, endorsed by or connected to Żabka
 > Polska. "Żabka" and "Żappka" are trademarks of their owners and are used here only to describe
 > compatibility. Use it only with your own account.
 
-## What it does
+---
 
-The watch computes the same time-based code the official app shows, entirely locally:
+## Why it exists
 
-```text
-Time (UTC epoch, watch clock)
-  ↓
-TOTP  (RFC 6238, HMAC-SHA1, 30 s, 6 digits)
-  ↓
-Żappka payload  https://srln.pl/view/dashboard?ploy=<ployId>&loyal=<otp>
-  ↓
-QR encoder (byte mode, ECC M, on-watch)
-  ↓
-Display (integer pixel modules, black on white, quiet zone)
-```
+At the checkout the phone is in a pocket, a bag or a glove, and the Żappka app needs to be
+unlocked, opened and scrolled to the code. The watch is already on the wrist.
 
-There is no phone link at runtime, no network, no backend and no telemetry. See
-[docs/zappka-protocol.md](docs/zappka-protocol.md) for what is confirmed, likely and unknown.
+Zappka QR shows **the same time-based code as the official app** on a Garmin Instinct 3: one
+press from the watch face, hold the wrist to the scanner, done.
+
+It has been in daily use on an **Instinct 3 AMOLED 45 mm** since October 2026: codes are accepted,
+points are credited, and a code scanned in the **last seconds** of its 30-second window still works.
+
+## How it works
+
+<p align="center">
+  <img src="docs/assets/how-it-works.svg" width="100%" alt="Account data is entered once, stored on the watch, a TOTP code is computed every 30 seconds, and the QR is shown at the checkout">
+</p>
+
+<table>
+<tr>
+<td width="40%" align="center"><img src="docs/screenshots/qr-amoled45.png" width="260" alt="QR code with a 29 s countdown on Instinct 3 AMOLED 45 mm"></td>
+<td>
+
+**At the checkout**
+
+1. Open **Zappka QR** from the glance loop. The code is already on the screen.
+2. Hold the watch to the scanner. The countdown shows how long the current code lives.
+3. Every 30 seconds a **new code** appears exactly at the step boundary, with a short buzz.
+4. In the last 2 seconds the countdown turns **inverted**. The code is *not* switched early:
+   field use shows that even the last seconds are accepted.
+5. Waiting in line? **START** turns on checkout mode: full brightness and a 10-minute timeout.
+
+</td>
+</tr>
+</table>
+
+## Features
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+<img src="docs/assets/icons/lock.svg" width="20" alt=""> **No permissions** — the manifest declares none: no network, no background, no positioning. The Connect IQ runtime enforces it.
+
+</td>
+<td width="50%" valign="top">
+
+<img src="docs/assets/icons/offline.svg" width="20" alt=""> **Fully offline** — TOTP (RFC 6238, HMAC-SHA1, 30 s) and the QR encoder run on the watch. No backend, no telemetry.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+<img src="docs/assets/icons/qr.svg" width="20" alt=""> **Own QR encoder** — byte mode, ECC M, version 4 (33×33), integer pixel modules, full quiet zone. Bit-identical to Project Nayuki's reference.
+
+</td>
+<td valign="top">
+
+<img src="docs/assets/icons/watch.svg" width="20" alt=""> **Built for Instinct 3** — layout computed per screen: octagon and subscreen on Solar, round AMOLED with the countdown below the code.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+<img src="docs/assets/icons/key.svg" width="20" alt=""> **Secret moved off the settings** — the settings field is blanked first, the secret goes to app-private storage, a typo never breaks a working account.
+
+</td>
+<td valign="top">
+
+<img src="docs/assets/icons/pulse.svg" width="20" alt=""> **Checkout friendly** — buzz on every new code, inverted countdown at the end of a step, checkout mode with maximum backlight, auto-exit to save battery.
+
+</td>
+</tr>
+</table>
+
+## Screenshots
+
+All screenshots are from the Connect IQ simulator with the **public example account** from the
+reference project (`123456789012`), not a real account. Both QR codes were decoded and matched an
+independent Python TOTP.
+
+| Instinct 3 AMOLED 45 mm | Instinct 3 Solar 45 mm | First start |
+|---|---|---|
+| <img src="docs/screenshots/qr-amoled45.png" width="220" alt="AMOLED: QR with 29 s countdown"> | <img src="docs/screenshots/qr-solar45.png" width="220" alt="Solar: QR with countdown in the subscreen"> | <img src="docs/screenshots/setup-required.png" width="220" alt="Setup required screen"> |
+| 6 px modules, countdown below | 2 px modules, countdown in the subscreen | Before account data is entered |
+
+## Watch setup
+
+1. **Get your account data once** (`ployId` and the 64-character hex secret) with the login script
+   of [iGerman00/zabka-totp-webapp](https://github.com/iGerman00/zabka-totp-webapp). It signs in
+   with your phone number and an SMS code. Read the script before running it.
+2. **Install the app**: copy the `.prg` to `GARMIN\APPS` over USB.
+3. **Garmin Connect** → device → Connect IQ apps → Zappka QR → Settings: enter the user ID and the
+   secret.
+4. **Open the app** on the watch. The settings field is blanked and the secret moves into watch
+   storage.
+
+Step by step with troubleshooting: [`docs/WATCH_SETUP.md`](docs/WATCH_SETUP.md).
 
 ## Supported devices
 
-| Device | Status | QR geometry |
-|---|---|---|
-| Instinct 3 Solar 45 mm (176×176 MIP, 1-bit) | simulator ✅, real device ⏳ | 2 px/module, 4-module quiet zone, countdown in the subscreen |
-| Instinct 3 AMOLED 45 mm (390×390) | simulator ✅, real device ✅, Żabka checkout ✅ | 6 px/module, 4-module quiet zone, countdown below |
-| Instinct 3 AMOLED 50 mm (416×416) | simulator ✅, real device ⏳ | 6 px/module, 4-module quiet zone, countdown below |
+| Device | Simulator | Real device | Checkout |
+|---|---|---|---|
+| Instinct 3 AMOLED 45 mm (390×390) | ✅ | ✅ | ✅ daily use since 2026-10 |
+| Instinct 3 AMOLED 50 mm (416×416) | ✅ | ⏳ | ⏳ |
+| Instinct 3 Solar 45 mm (176×176 MIP) | ✅ | ⏳ | ⏳ (smallest modules, main open risk) |
 
-"Simulator ✅" means the simulator screenshot was decoded with OpenCV and matched an independent
-Python TOTP. The AMOLED 45 mm model was tested on a real watch at a Żabka checkout on 2026-10-08: the code was accepted and points were credited, even when scanned with 3–4 s left.
-
-Adding another device means adding a `<iq:product>` to `manifest.xml`. The layout is computed at
-runtime from screen size, shape and subscreen.
-
-## Setup
-
-1. **Get your account data (once, on a computer).** Use `login-for-secrets.py` from
-   [iGerman00/zabka-totp-webapp](https://github.com/iGerman00/zabka-totp-webapp). It logs in with your
-   phone number + SMS code and prints `{"secret":"<64 hex chars>","ployId":"<digits>"}`.
-   Read the script before running it. It also runs on a phone (Android: Termux; iOS: a-Shell), so a
-   computer is not required.
-   Store the printed JSON in a password manager. On Windows you can keep it in a DPAPI vault bound to
-   your Windows user: `pwsh tools/vault.ps1 put secrets.json`, then delete `secrets.json`.
-2. **Install the app** (sideload, see Build).
-3. In **Garmin Connect** → device → Connect IQ apps → Zappka QR → Settings, enter:
-   - *Żappka user ID (ployId)*: the digits
-   - *Żappka secret (hex)*: the 64-character hex string (password field)
-4. Open the app on the watch. On first start it **blanks the settings field first**, then validates
-   the secret and moves it into app-private watch storage, so it is never shown again.
-
-The order of the two fields does not matter: a secret entered before the ID is kept until the ID
-arrives. To change accounts, enter a new secret. If the new value is invalid, the watch shows
-"New secret rejected" for a few seconds and **keeps the previous working account**.
-
-A planned alternative, linking the account from the watch itself with the SMS code read from the
-watch notification, is described in [docs/provisioning-on-watch.md](docs/provisioning-on-watch.md).
-
-## Using it
-
-- Open the app and the QR appears immediately. It switches automatically every 30 s, exactly at the
-  step boundary.
-- The countdown shows seconds left. In the last 2 s it is shown inverted. The code is **not**
-  switched early, because the server's tolerance window is unknown (see protocol doc).
-- BACK exits. MENU shows an info screen (masked ID, key length, UTC time).
-- The app closes itself after 3 minutes to save battery.
-
-## Security model
-
-- **The secret never leaves the watch at runtime.** The app declares no permissions: no
-  `Communications`, no background, no positioning. The Connect IQ runtime itself prevents network
-  access without a declared permission.
-- **No backend, no telemetry, no analytics, no logging of credentials.** `ZappkaCredentials.toString()`
-  only prints `secret_present` and the length. Error screens never include values.
-- **Storage:** Connect IQ has **no secure enclave or keystore API**. The secret lives in
-  `Application.Storage` (app-private, on-watch, not encrypted at rest by the app). Anyone with
-  developer-level access to the watch filesystem could read it. Only `ployId` and the secret are stored.
-- **Provisioning caveat:** Connect IQ app settings travel phone → Garmin Connect → watch. The
-  secret therefore passes through Garmin's settings-sync channel **once**, when you enter it. The app
-  then clears the field, but treat the secret as having been handled by Garmin Connect. A future
-  phone-helper provisioning path (see Roadmap) could avoid this.
-- The repo contains no real credentials. Tests use the public example values from the reference
-  project's README (`123456789012` / `2db764…`), which are not a real account.
+Another device is one `<iq:product>` line in `manifest.xml`: the layout is computed at runtime from
+the screen size, shape and subscreen.
 
 ## Build
 
-Requires Connect IQ SDK ≥ 7 (developed with 9.1.0) and a developer key.
+Requires the Connect IQ SDK (developed with 9.1.0) and a developer key.
 
 ```bash
-openssl genrsa -out key.pem 4096 && openssl pkcs8 -topk8 -inform PEM -outform DER -in key.pem -out developer_key.der -nocrypt
+openssl genrsa -out key.pem 4096
+openssl pkcs8 -topk8 -inform PEM -outform DER -in key.pem -out developer_key.der -nocrypt
 ```
 
 ```bash
-monkeyc -f monkey.jungle -d instinct3solar45mm -o bin/zappka.prg -y developer_key.der
+monkeyc -f monkey.jungle -d instinct3amoled45mm -o bin/zappka.prg -y developer_key.der -r
 ```
 
-To sideload, copy `bin/zappka.prg` to `GARMIN/APPS/` on the watch over USB.
-
-### Tests
+Tests run in the simulator (start it first with `connectiq`):
 
 ```bash
 monkeyc -f monkey.jungle -d instinct3solar45mm -o bin/test.prg -y developer_key.der -t
-```
-
-```bash
 monkeydo bin/test.prg instinct3solar45mm /t
 ```
 
-There are 17 deterministic tests: RFC 6238 vectors, the reference end-to-end OTP, payload format,
-credential validation and redaction, QR matrix vs. Nayuki `qrcodegen` (v4 full matrix, v8 checksum),
-the layout for each Instinct 3 model, and the settings import state machine (pair, secret before ID,
-typo keeps the working pair, invalid without a pair, ID change). Test-only constants are annotated
-`(:test)` and are not compiled into release builds.
+Release builds with commit, SDK version and sha256 per device: `tools/release.sh developer_key.der`
+(log in [`docs/RELEASES.md`](docs/RELEASES.md)).
 
-### Release
+<details>
+<summary><b>Project structure</b></summary>
 
-```bash
-tools/release.sh ../keys/developer_key.der
+```text
+source/
+├── ZappkaApp.mc ZappkaView.mc ZappkaDelegate.mc   app, QR view, buttons
+├── crypto/        Hex, TotpGenerator (RFC 6238 + own RFC 2104 HMAC)
+├── qr/            QrEncoder (byte mode, v1–10, ECC L/M), QrRenderer (layout, bitmap)
+├── storage/       CredentialStore (settings import state machine)
+├── ui/            CountdownRenderer, ZappkaGlanceView
+└── zappka/        ZappkaProtocol (all constants), ZappkaCredentials, ZappkaPayload
+tests/             17 simulator tests: RFC vectors, payload, QR vs. Nayuki, layout, settings import
+resources/         strings (EN), settings, icon        resources-pol/  strings (PL)
+tools/             release.sh, screenshots.ps1, sim-e2e.sh, build-personal.sh, vault.ps1, check-secrets.py
+docs/              ARCHITECTURE, PROTOCOL, WATCH_SETUP, ON_WATCH_LINKING, ROADMAP, RELEASES, assets/
 ```
 
-It refuses a dirty tree, builds every product with `-r`, aborts if any settings default looks like a
-secret, and prints the commit, SDK and sha256 of each `.prg` for `docs/RELEASES.md`.
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+</details>
 
-`tools/build-personal.sh` (secret baked into the `.prg`) reads the vault through a pipe. The output
-contains your secret: delete it right after copying it to the watch.
+<details>
+<summary><b>Implementation notes</b></summary>
 
-`tools/sim-e2e.sh <device>` builds with the public example account, runs it in the simulator,
-screenshots it (Windows) and decodes the QR with OpenCV.
+- **HMAC:** the SDK's `HashBasedMessageAuthenticationCode` rejects SHA-1, so HMAC (RFC 2104) is built on `Cryptography.Hash` SHA-1.
+- **Watchdog:** the Instinct 3 Solar budget per callback is tight. Reed–Solomon uses log tables in one fused loop, the mask is applied during placement, the mask is fixed (0) and layout runs in `onLayout`.
+- **Rendering:** the QR is encoded once per 30-second step into a 2-colour `BufferedBitmap`; the 1 s timer only blits it and redraws the countdown.
+- **Time:** `Time.now().value()` is UTC epoch seconds, independent of the time zone. Keep the watch clock synced with the phone.
+</details>
 
-## Implementation notes
+## Security
 
-- **HMAC:** Connect IQ's `HashBasedMessageAuthenticationCode` rejects `HASH_SHA1` (verified in
-  SDK 9.1). So HMAC (RFC 2104) is built on `Cryptography.Hash` SHA-1, which works.
-- **QR encoder** (`source/qr/QrEncoder.mc`): a minimal byte-mode encoder for versions 1–10 at ECC
-  L/M, written for this project. Its structure follows Project Nayuki's QR Code generator (MIT, see
-  `THIRD_PARTY.md`). No existing pure-Monkey C QR library with a clear license was found. The payload
-  (61 bytes) gives **version 4, 33×33**. Mask is fixed (0): automatic mask scoring costs more than the
-  Instinct watchdog allows in one callback, and any mask decodes correctly.
-- **Watchdog:** the first build tripped the Instinct 3 Solar watchdog. The fixes were a fused
-  log-table Reed–Solomon loop, masking during placement, and computing the layout in `onLayout`
-  (its own budget) instead of `onUpdate`.
-- **Rendering:** the QR is encoded once per 30 s step into a 2-colour `BufferedBitmap`. The 1 s timer
-  only blits that bitmap and redraws the countdown. Modules are integer pixels with no scaling or
-  anti-aliasing, drawn as merged horizontal runs.
-- **Time:** `Time.now().value()` is UTC epoch seconds, so the result does not depend on timezone. The
-  watch syncs its clock from GPS/phone; after a long period without sync, drift of more than a few
-  seconds could cause rejections near step boundaries. The info screen shows UTC for checking.
+- **The secret never leaves the watch at runtime.** No permissions are declared, so the app cannot reach the network.
+- **Storage:** Connect IQ has no keystore. The secret lives in `Application.Storage` (app-private, not encrypted by the app). Anyone with developer-level access to the watch filesystem could read it.
+- **Provisioning:** settings travel phone → Garmin Connect → watch once. The app blanks the field before anything else.
+- **Repository:** no real credentials. Tests and screenshots use the public example account. CI scans every push for secrets.
 
-## Known risks / open items
-
-1. **Instinct 3 Solar module size.** The usable screen is an octagon with the subscreen cut out.
-   Measured on the simulator mask, 3 px modules fit only with *no* quiet zone, so the app uses
-   2 px (≈0.3 mm, QR ≈10–11 mm). Checkout 2D imagers usually read this, but it is the main
-   real-world risk. Test at the checkout, and if it fails, consider a "3 px, reduced quiet zone" option.
-2. Server acceptance window unknown (see protocol doc).
-3. MIP display contrast in low light: turn on the backlight (the app requests it on open).
-4. Instinct 3 Solar and AMOLED 50 mm have not been tested on real devices yet.
+Details: [`THREAT_MODEL.md`](THREAT_MODEL.md). Reporting: [`SECURITY.md`](SECURITY.md).
 
 ## Roadmap
 
-ZPG-00…12 done (real device + checkout on AMOLED 45 mm). ZPG-13: release candidate `v1.0.0-rc1`
-(audit fixes, see [docs/AUDIT-2026-11-12.md](docs/AUDIT-2026-11-12.md)); becomes `v1.0.0` after a
-re-check on the watch at a checkout. Next: ZPG-14 on-watch account linking
-([docs/provisioning-on-watch.md](docs/provisioning-on-watch.md)), then Solar/AMOLED 50 field tests.
-Full plan: [docs/IMPROVEMENT-PLAN.md](docs/IMPROVEMENT-PLAN.md).
+- **v1.0 — current.** Offline QR, checkout mode, settings import that never loses a working account, release provenance.
+- **v1.1 — next.** Link the account from the watch itself: the SMS code shows up as a watch notification and is entered with the buttons, no computer needed ([`docs/ON_WATCH_LINKING.md`](docs/ON_WATCH_LINKING.md)).
+- Field tests on Solar 45 and AMOLED 50.
+
+Full list: [`docs/ROADMAP.md`](docs/ROADMAP.md) · changes: [`CHANGELOG.md`](CHANGELOG.md).
 
 ## License
 
-MIT, see [LICENSE](LICENSE). Third-party notices: [THIRD_PARTY.md](THIRD_PARTY.md).
+MIT, see [`LICENSE`](LICENSE). Third-party notices: [`THIRD_PARTY.md`](THIRD_PARTY.md).
