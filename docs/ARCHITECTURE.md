@@ -46,11 +46,17 @@ and 3 px fits only with a 0-module quiet zone. So 2 px with the full quiet zone 
 `CredentialStore.importFromSettings()` runs on start and on every settings change:
 
 1. If the secret field is not empty, it is **blanked first**, before any validation.
-2. A secret without an ID is kept as *pending* in Storage until the ID arrives.
-3. A valid pair replaces the stored one. An invalid one never does: with a working pair the
-   watch shows "New secret rejected" for 4 s and keeps it; without one it shows "Invalid".
+2. A secret without an ID is kept as *pending* in Storage until the ID arrives. It is never
+   paired with the stored ID.
+3. Without a working pair, a valid pair is applied directly.
+4. With a working pair: both fields changed is a complete update and is applied; a change of
+   only one field is *staged* and the QR view asks for confirmation (YES applies, NO or BACK
+   keeps the working pair and puts the settings ID back). The working pair keeps producing
+   codes until then.
+5. Invalid input never replaces anything: with a working pair the watch shows "New secret
+   rejected" once and the settings ID is put back; without one it shows "Invalid".
 
-Covered by `tests/CredentialStoreTest.mc`.
+Covered by `tests/CredentialStoreTest.mc` and `tests/AccountChangeTest.mc`.
 
 ## Menu and text screens
 

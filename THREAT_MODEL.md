@@ -48,13 +48,13 @@ TB4: Developer machine -> repository / release
 | ID | Threat | Category | Mitigation | Residual |
 |----|--------|----------|------------|----------|
 | T1 | Secret read from watch storage by someone with developer-level filesystem access | Information disclosure | app-private storage; watch stays on the wrist; device lock | **Accepted**: Connect IQ has no keystore |
-| T2 | Secret kept by Garmin Connect after setup | Information disclosure | field blanked first; one-time transit | Unknown retention on Garmin's side; removed by on-watch linking (v1.1) |
+| T2 | Secret kept by Garmin Connect after setup | Information disclosure | field blanked first; one-time transit | Unknown retention on Garmin's side; removed by on-watch linking (v1.2) |
 | T3 | Secret sent off the watch by the app | Information disclosure | **no permissions**, enforced by the runtime; CI guard on the manifest | None known |
 | T4 | Secret in logs or error screens | Information disclosure | `toString()` shows only presence and length; errors carry no values | None known |
-| T5 | Typo or bad sync disables a working account | Denial of service | invalid input never replaces a working pair; rejection shown once | Low |
-| T6 | Secret committed to the repo or baked into a shared `.prg` | Information disclosure | `.gitignore`, gitleaks, `check-secrets.py`, release script aborts on secret-like defaults; personal builds read from an encrypted vault and must be deleted after install | Personal builds remain the user's responsibility |
+| T5 | Typo, bad sync or a half-updated account disables a working account | Denial of service | invalid input never replaces a working pair; a change of only the secret or only the ID needs confirmation on the watch; a secret is never paired with the stored ID implicitly | Low |
+| T6 | Secret committed to the repo or baked into a shared `.prg` | Information disclosure | `.gitignore`, gitleaks, `check-secrets.py`, `tools/check-build.py` (before the build: empty defaults in `properties.xml`; after: the compiler's `-settings.json` must exist with empty defaults and the `.prg` holds no 64+ hex run); personal builds read from an encrypted vault and must be deleted after install | Personal builds remain the user's responsibility |
 | T7 | Shoulder-surfing / photo of the QR | Spoofing | code valid for one 30 s step; auto-exit after 3 min | Low |
-| T8 | Watch clock drift makes codes invalid | Denial of service | UTC clock, sync with phone; MENU shows UTC time | Low |
+| T8 | Watch clock drift makes codes invalid | Denial of service | UTC clock, sync with phone; MENU → Status shows UTC time | Low |
 | T9 | Tampered release | Tampering | builds signed with the developer key; sha256 per build in `docs/RELEASES.md` | Low |
 | T10 | Żabka changes the scheme (host, secret rotation, signature) | Availability | all constants in `ZappkaProtocol.mc`; protocol notes in `docs/PROTOCOL.md` | Outside our control |
 

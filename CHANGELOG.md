@@ -3,6 +3,28 @@
 All notable changes to this project are documented here. This project loosely
 follows [Semantic Versioning](https://semver.org/).
 
+## v1.1.0-rc2 — safe account changes, stricter release check
+
+### Fixed
+- **A half-updated account can no longer replace a working one.** Before, a new secret was
+  saved together with the stored ID (and a new ID with the stored secret) without asking.
+  Now, with a working account on the watch:
+  - both fields changed: applied (complete update);
+  - only the secret or only the ID changed: the watch asks *Use new account data for
+    ID ****1234?*; until YES the old account keeps producing codes; NO keeps it and puts the
+    settings ID back;
+  - a secret with an empty ID field waits for the ID and is never paired with the stored one.
+- An invalid ID in the settings is reported once; the settings field is put back, so the
+  notice no longer appears on every start.
+- **Release check could pass silently.** `release.sh` grepped the compiler's
+  `-settings.json`; a missing file made the check pass. The new `tools/check-build.py` fails
+  on a missing file, checks every default in it, checks `properties.xml` before building and
+  scans the `.prg` itself for any 64+ hex run. Verified on a build with a baked-in secret.
+
+### Added
+- 6 tests for account changes (33 in total). CI also checks that `properties.xml` has no
+  default values.
+
 ## v1.1.0-rc1 — watch menu
 
 ### Added

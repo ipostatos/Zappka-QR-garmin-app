@@ -26,6 +26,7 @@ monkeyc -f monkey.jungle -d instinct3solar45mm -o bin/test.prg -y developer_key.
 monkeydo bin/test.prg instinct3solar45mm /t            # all PASS
 monkeyc -f monkey.jungle -d <each device> -o bin/z.prg -y developer_key.der -r
 python -I tools/check-secrets.py                       # also runs in CI
+python -I tools/check-build.py --properties             # also runs in CI
 ```
 
 Run the tests on Solar 45 at least: it has the smallest memory and the tightest watchdog.

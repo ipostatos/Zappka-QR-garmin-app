@@ -67,7 +67,12 @@ inverted; the code is still valid.
 
 ## Changing the account
 
-Enter a new secret (and ID) in Garmin Connect. A valid pair replaces the stored one.
+Enter **both** the new ID and the new secret in Garmin Connect: a complete pair replaces the
+stored one.
+
+If only one field changes (for example a re-issued secret for the same ID), the watch asks
+*Use new account data for ID ****1234?* when the QR screen opens. Until you confirm, the old
+account keeps working. NO or BACK keeps it.
 
 ## Signing out
 

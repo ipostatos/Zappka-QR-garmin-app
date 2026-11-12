@@ -37,4 +37,5 @@ Threat model: [`THREAT_MODEL.md`](THREAT_MODEL.md).
 
 CI runs a **gitleaks** secret scan over the full history and repository guards
 (`tools/check-secrets.py`: no permissions in the manifest, no secret-like values outside the public
-example) on every push and pull request.
+example; `tools/check-build.py --properties`: no default values in the app settings) on every push
+and pull request. Release builds are checked by `tools/check-build.py` before and after compiling.

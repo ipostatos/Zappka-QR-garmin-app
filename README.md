@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/Garmin%20app-v1.1%20rc1-007CC3?style=flat-square&logo=garmin&logoColor=white" alt="Garmin app v1.1 rc1"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/Garmin%20app-v1.1%20rc2-007CC3?style=flat-square&logo=garmin&logoColor=white" alt="Garmin app v1.1 rc2"></a>
   <img src="https://img.shields.io/badge/Connect%20IQ-Monkey%20C-111?style=flat-square" alt="Connect IQ, Monkey C">
   <img src="https://img.shields.io/badge/permissions-none-16a34a?style=flat-square" alt="No permissions">
   <img src="https://img.shields.io/badge/network-offline-16a34a?style=flat-square" alt="Offline">
-  <img src="https://img.shields.io/badge/tests-26%20passing-16a34a?style=flat-square" alt="26 tests passing">
+  <img src="https://img.shields.io/badge/tests-33%20passing-16a34a?style=flat-square" alt="33 tests passing">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-555?style=flat-square" alt="MIT license"></a>
 </p>
 
@@ -99,7 +99,7 @@ points are credited, and a code scanned in the **last seconds** of its 30-second
 <tr>
 <td valign="top">
 
-<img src="docs/assets/icons/key.svg" width="20" alt=""> **Secret moved off the settings** — the settings field is blanked first, the secret goes to app-private storage, a typo never breaks a working account.
+<img src="docs/assets/icons/key.svg" width="20" alt=""> **Safe account changes** — the settings field is blanked first, the secret goes to app-private storage; a typo or a half-updated account never replaces a working one without confirmation on the watch.
 
 </td>
 <td valign="top">
@@ -190,7 +190,9 @@ monkeydo bin/test.prg instinct3solar45mm /t
 ```
 
 Release builds with commit, SDK version and sha256 per device: `tools/release.sh developer_key.der`
-(log in [`docs/RELEASES.md`](docs/RELEASES.md)).
+(log in [`docs/RELEASES.md`](docs/RELEASES.md)). It stops if `properties.xml` has a default value,
+if the compiler's settings file is missing or non-empty, or if a `.prg` contains anything that looks
+like a secret (`tools/check-build.py`).
 
 <details>
 <summary><b>Project structure</b></summary>
@@ -203,10 +205,10 @@ source/
 ├── storage/       CredentialStore (settings import, sign out), Prefs (menu settings)
 ├── ui/            ZappkaMenu (menu, sign out, about), TextScreen, CountdownRenderer, ZappkaGlanceView
 └── zappka/        ZappkaProtocol (all constants), ZappkaCredentials, ZappkaPayload
-tests/             26 simulator tests: RFC vectors, payload, QR vs. Nayuki, layout, settings import,
-                   menu actions, every text screen fits the screen (EN and PL)
+tests/             33 simulator tests: RFC vectors, payload, QR vs. Nayuki, layout, settings import,
+                   account changes, menu actions, every text screen fits the screen (EN and PL)
 resources/         strings (EN), settings, icon        resources-pol/  strings (PL)
-tools/             release.sh, screenshots.ps1, sim-e2e.sh, build-personal.sh, vault.ps1, check-secrets.py
+tools/             release.sh, check-build.py, check-secrets.py, screenshots.ps1, sim-e2e.sh, build-personal.sh, vault.ps1
 docs/              ARCHITECTURE, PROTOCOL, WATCH_SETUP, ON_WATCH_LINKING, ROADMAP, RELEASES, assets/
 ```
 
