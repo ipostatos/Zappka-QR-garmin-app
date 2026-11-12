@@ -77,6 +77,27 @@ class ZappkaSignOutDelegate extends WatchUi.ConfirmationDelegate {
     }
 }
 
+// Confirmation of a staged one-field account change. YES applies it, NO or BACK keeps the
+// working pair and puts the settings ID back.
+class ZappkaStagedDelegate extends WatchUi.ConfirmationDelegate {
+    private var _view as ZappkaView;
+
+    function initialize(view as ZappkaView) {
+        ConfirmationDelegate.initialize();
+        _view = view;
+    }
+
+    function onResponse(response as WatchUi.Confirm) as Boolean {
+        if (response == WatchUi.CONFIRM_YES) {
+            CredentialStore.applyStaged();
+        } else {
+            CredentialStore.discardStaged();
+        }
+        _view.reload();
+        return true;
+    }
+}
+
 // About: name, version, license, disclaimer, source.
 class ZappkaAboutView extends WatchUi.View {
     function initialize() {

@@ -131,7 +131,20 @@ class ZappkaView extends WatchUi.View {
         if (_checkout) {
             lightOn();   // keep the screen at full brightness while waiting in line
         }
+        askStagedChange();
         WatchUi.requestUpdate();
+    }
+
+    // A one-field account change (only the secret or only the ID) is applied only after the user
+    // confirms it here; until then the working pair keeps producing codes.
+    private function askStagedChange() as Void {
+        var id = CredentialStore.stagedUserId();
+        if (id == null) {
+            return;
+        }
+        var masked = new ZappkaCredentials(id, new [0]b).maskedUserId();
+        var text = (WatchUi.loadResource(Rez.Strings.ConfirmNewData) as String) + "\nID " + masked + "?";
+        WatchUi.pushView(new WatchUi.Confirmation(text), new ZappkaStagedDelegate(self), WatchUi.SLIDE_IMMEDIATE);
     }
 
     // Regenerates only when the TOTP counter changes.

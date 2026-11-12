@@ -61,9 +61,14 @@ function statusScreenFitsWithoutAccount(logger as Logger) as Boolean {
 }
 
 (:test)
+function stagedConfirmationFits(logger as Logger) as Boolean {
+    return textFitsScreen((WatchUi.loadResource(Rez.Strings.ConfirmNewData) as String) + "\nID ****9012?", logger);
+}
+
+(:test)
 function messageScreensFit(logger as Logger) as Boolean {
     var ids = [Rez.Strings.SetupRequired, Rez.Strings.NeedUserId, Rez.Strings.InvalidConfig,
-               Rez.Strings.QrFailed, Rez.Strings.SecretRejected];
+               Rez.Strings.QrFailed, Rez.Strings.SecretRejected, Rez.Strings.SignOutConfirm];
     for (var i = 0; i < ids.size(); i++) {
         if (!textFitsScreen(WatchUi.loadResource(ids[i]) as String, logger)) {
             return false;
@@ -81,6 +86,7 @@ const PL_SCREENS = [
         "Sekret zapisany\nTeraz dodaj\nID użytkownika",
         "Nowy sekret\nodrzucony\nStare konto działa",
         "Zappka QR v1.1.0\nLicencja MIT\nNieoficjalna,\nnie od Zabki",
+        "Użyć nowych\ndanych dla\nID ****9012?",
         "Wylogować i usunąć\nkonto z tego\nzegarka?"
 ];
 

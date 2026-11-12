@@ -21,4 +21,5 @@
     <string id="MenuAbout">About</string>
     <string id="SignOutConfirm">Sign out and delete\nthe account from\nthis watch?</string>
     <string id="AboutBody">MIT License\nUnofficial,\nnot by Zabka</string>
+    <string id="ConfirmNewData">Use new account\ndata for</string>
 </strings>

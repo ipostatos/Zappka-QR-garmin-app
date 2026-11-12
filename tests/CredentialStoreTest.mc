@@ -71,7 +71,10 @@ function storeInvalidWithoutPairIsInvalid(logger as Logger) as Boolean {
 function storeIdChangeRevalidatesStoredSecret(logger as Logger) as Boolean {
     resetStore();
     enterSettings(EXAMPLE_ID, EXAMPLE_SECRET);
-    Test.assertEqual(enterSettings("987654321098", ""), :imported);
+    // ID-only change with a working pair is staged and applied only after confirmation
+    Test.assertEqual(enterSettings("987654321098", ""), :staged);
+    Test.assertEqual((CredentialStore.load()[1] as ZappkaCredentials).userId, EXAMPLE_ID);
+    CredentialStore.applyStaged();
     Test.assertEqual((CredentialStore.load()[1] as ZappkaCredentials).userId, "987654321098");
     Test.assertEqual(enterSettings("12ab", ""), :rejected);   // bad id keeps the working pair
     Test.assertEqual((CredentialStore.load()[1] as ZappkaCredentials).userId, "987654321098");
