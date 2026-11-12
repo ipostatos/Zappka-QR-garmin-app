@@ -54,7 +54,7 @@ TB4: Developer machine -> repository / release
 | T5 | Typo, bad sync or a half-updated account disables a working account | Denial of service | invalid input never replaces a working pair; a change of only the secret or only the ID needs confirmation on the watch; a secret is never paired with the stored ID implicitly | Low |
 | T6 | Secret committed to the repo or baked into a shared `.prg` | Information disclosure | `.gitignore`, gitleaks, `check-secrets.py`, `tools/check-build.py` (before the build: empty defaults in `properties.xml`; after: the compiler's `-settings.json` must exist with empty defaults and the `.prg` holds no 64+ hex run); personal builds read from an encrypted vault and must be deleted after install | Personal builds remain the user's responsibility |
 | T7 | Shoulder-surfing / photo of the QR | Spoofing | code valid for one 30 s step; auto-exit after 3 min | Low |
-| T8 | Watch clock drift makes codes invalid | Denial of service | UTC clock, sync with phone; MENU → Status shows UTC time | Low |
+| T8 | Watch clock drift makes codes invalid | Denial of service | UTC clock, sync with phone; `sync?` hint after 24 h without the phone; MENU → Status shows UTC time and when the phone was last seen | Low |
 | T9 | Tampered release | Tampering | builds signed with the developer key; sha256 per build in `docs/RELEASES.md` | Low |
 | T10 | Żabka changes the scheme (host, secret rotation, signature) | Availability | all constants in `ZappkaProtocol.mc`; protocol notes in `docs/PROTOCOL.md` | Outside our control |
 

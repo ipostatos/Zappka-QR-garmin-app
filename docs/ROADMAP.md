@@ -18,6 +18,7 @@
 - [x] MENU: checkout mode, buzz on new code, status (clock check), sign out with confirmation, about (version, license)
 - [x] Compact message screens that fit the Instinct 3 Solar octagon and subscreen
 - [x] Tests: sign out, preferences, every text screen fits the screen (EN and PL)
+- [x] Clock hint after 24 h without the phone; auto-exit 1/3/5 min in the menu
 - [ ] Check the menu on the watch, then tag `v1.1.0`
 
 ## v1.2 — next: link from the watch
@@ -35,5 +36,4 @@ Design: [`ON_WATCH_LINKING.md`](ON_WATCH_LINKING.md).
 ## Later
 
 - [ ] Field tests on Instinct 3 Solar 45 (2 px modules) and AMOLED 50
-- [ ] Clock-drift hint when the phone has not been connected for a long time
 - [ ] More devices (fēnix 8, epix Pro, Forerunner 965, Venu 3): one manifest line plus a layout test each

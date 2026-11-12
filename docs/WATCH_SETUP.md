@@ -48,8 +48,8 @@ The order of the two fields does not matter: a secret entered before the ID wait
 |---|---|
 | open from glance | QR is on the screen |
 | **START** | checkout mode on/off: maximum backlight, 10 min timeout |
-| **MENU** | menu: checkout mode, buzz on new code, status, sign out, about |
-| **BACK** | exit (the app also closes itself after 3 min) |
+| **MENU** | menu: checkout mode, buzz on new code, auto-exit, status, sign out, about |
+| **BACK** | exit (the app also closes itself after 3 min; **MENU → Auto-exit** sets 1, 3 or 5) |
 
 A new code appears every 30 seconds with a short buzz. In the last 2 seconds the countdown is
 inverted; the code is still valid.
@@ -64,6 +64,7 @@ inverted; the code is still valid.
 | *New secret rejected. Old account kept* (4 s, then the QR) | the new value was invalid | the previous account still works; re-enter the new value if you meant to change it |
 | Checkout does not accept the code | watch clock drifted or the secret was re-issued | sync the watch with the phone; **MENU → Status** shows UTC time; get the secret again (step 1) |
 | Scanner does not see the code | low brightness | press START for checkout mode |
+| `sync?` next to the countdown (`!` on Solar) | the phone has not been connected for over 24 h, the clock may drift | connect the phone, open Garmin Connect, then the app |
 
 ## Changing the account
 

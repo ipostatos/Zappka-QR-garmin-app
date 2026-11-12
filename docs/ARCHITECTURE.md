@@ -62,7 +62,9 @@ Covered by `tests/CredentialStoreTest.mc` and `tests/AccountChangeTest.mc`.
 
 - `ZappkaMenu` builds a native `Menu2` (system-rendered on every device): two toggles, status,
   sign out (native `Confirmation`; the item is removed from the open menu after sign out) and about.
-- `Prefs` keeps menu settings in Storage (buzz on new code, default on).
+- `Prefs` keeps menu settings in Storage (buzz on new code, auto-exit 1/3/5 min) and the last
+  time the phone was connected (written at most once a minute while the app is open). After
+  24 h without the phone the countdown shows a clock hint.
 - `TextScreen` draws About, Status and the QR-screen messages. On a device with a subscreen the
   text block starts below it. `tests/TextScreenTest.mc` measures every line with the watch font
   and checks it lies inside the visible screen shape and clear of the subscreen.

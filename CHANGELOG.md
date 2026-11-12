@@ -3,6 +3,16 @@
 All notable changes to this project are documented here. This project loosely
 follows [Semantic Versioning](https://semver.org/).
 
+## v1.1.0-rc3 — clock hint, auto-exit choice
+
+### Added
+- **Clock hint.** The watch takes its time from the phone. While the app is open it remembers
+  when the phone was last connected; after 24 h without it the countdown shows `sync?`
+  (AMOLED) or `!` (Solar subscreen), and *Status* shows how long ago the phone was seen.
+- **Auto-exit** in the menu: 1, 3 or 5 minutes (default 3), remembered. Checkout mode keeps
+  its 10 minutes.
+- 3 tests (36 in total), including the width of the countdown with the hint.
+
 ## v1.1.0-rc2 — safe account changes, stricter release check
 
 ### Fixed

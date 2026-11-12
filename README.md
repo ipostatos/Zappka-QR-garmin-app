@@ -9,11 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/Garmin%20app-v1.1%20rc2-007CC3?style=flat-square&logo=garmin&logoColor=white" alt="Garmin app v1.1 rc2"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/Garmin%20app-v1.1%20rc3-007CC3?style=flat-square&logo=garmin&logoColor=white" alt="Garmin app v1.1 rc3"></a>
   <img src="https://img.shields.io/badge/Connect%20IQ-Monkey%20C-111?style=flat-square" alt="Connect IQ, Monkey C">
   <img src="https://img.shields.io/badge/permissions-none-16a34a?style=flat-square" alt="No permissions">
   <img src="https://img.shields.io/badge/network-offline-16a34a?style=flat-square" alt="Offline">
-  <img src="https://img.shields.io/badge/tests-33%20passing-16a34a?style=flat-square" alt="33 tests passing">
+  <img src="https://img.shields.io/badge/tests-36%20passing-16a34a?style=flat-square" alt="36 tests passing">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-555?style=flat-square" alt="MIT license"></a>
 </p>
 
@@ -63,6 +63,8 @@ points are credited, and a code scanned in the **last seconds** of its 30-second
 4. In the last 2 seconds the countdown turns **inverted**. The code is *not* switched early:
    field use shows that even the last seconds are accepted.
 5. Waiting in line? **START** turns on checkout mode: full brightness and a 10-minute timeout.
+   If the phone has not been connected for a day, the countdown shows `sync?`: the watch clock
+   may have drifted, connect the phone before paying.
 6. **MENU** opens the watch menu: checkout mode, buzz on/off, status, sign out, about.
 
 </td>
@@ -130,7 +132,8 @@ Press **MENU** on the QR screen.
 |---|---|
 | **Checkout mode** | on/off: maximum backlight, 10-minute timeout (same as **START**) |
 | **Buzz on new code** | on/off: short vibration every 30 s when the code changes; remembered |
-| **Status** | masked ID, UTC time of the watch, seconds to the next code: quick clock check |
+| **Auto-exit** | 1, 3 or 5 minutes before the app closes itself; remembered |
+| **Status** | masked ID, UTC time of the watch, seconds to the next code, when the phone was last seen: quick clock check |
 | **Sign out** | asks for confirmation, then deletes the account from the watch and clears the app settings |
 | **About** | version, MIT license, unofficial-app note |
 
@@ -205,7 +208,7 @@ source/
 ├── storage/       CredentialStore (settings import, sign out), Prefs (menu settings)
 ├── ui/            ZappkaMenu (menu, sign out, about), TextScreen, CountdownRenderer, ZappkaGlanceView
 └── zappka/        ZappkaProtocol (all constants), ZappkaCredentials, ZappkaPayload
-tests/             33 simulator tests: RFC vectors, payload, QR vs. Nayuki, layout, settings import,
+tests/             36 simulator tests: RFC vectors, payload, QR vs. Nayuki, layout, settings import,
                    account changes, menu actions, every text screen fits the screen (EN and PL)
 resources/         strings (EN), settings, icon        resources-pol/  strings (PL)
 tools/             release.sh, check-build.py, check-secrets.py, screenshots.ps1, sim-e2e.sh, build-personal.sh, vault.ps1
