@@ -33,7 +33,6 @@ function textFitsScreen(text as String, logger as Logger) as Boolean {
             continue;
         }
         var x1 = (w - lw) / 2;
-        var x2 = x1 + lw - 1;
         var y1 = top + k * fh;
         var y2 = y1 + fh - 1;
         if (!QrRenderer.fits(w, h, ds.screenShape, sub, x1, y1, lw, fh)) {
@@ -52,12 +51,12 @@ function aboutScreenFits(logger as Logger) as Boolean {
 (:test)
 function statusScreenFitsWithAccount(logger as Logger) as Boolean {
     var c = ZappkaCredentials.parse(EXAMPLE_ID, EXAMPLE_SECRET);
-    return textFitsScreen(ZappkaInfoView.statusText(c, 2000000000), logger);
+    return textFitsScreen(ZappkaInfoView.statusText(c, 2000000000, "13 d ago"), logger);
 }
 
 (:test)
 function statusScreenFitsWithoutAccount(logger as Logger) as Boolean {
-    return textFitsScreen(ZappkaInfoView.statusText(null, 2000000000), logger);
+    return textFitsScreen(ZappkaInfoView.statusText(null, 2000000000, "never"), logger);
 }
 
 (:test)

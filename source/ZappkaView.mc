@@ -124,8 +124,10 @@ class ZappkaView extends WatchUi.View {
     }
 
     function onTick() as Void {
-        var limit = _checkout ? ZappkaProtocol.CHECKOUT_EXIT_SECONDS : ZappkaProtocol.AUTO_EXIT_SECONDS;
-        if (Time.now().value() - _openedAt > limit) {
+        var now = Time.now().value();
+        Prefs.notePhone(System.getDeviceSettings().phoneConnected, now);
+        var limit = _checkout ? ZappkaProtocol.CHECKOUT_EXIT_SECONDS : Prefs.autoExitSeconds();
+        if (now - _openedAt > limit) {
             System.exit();
         }
         if (_checkout) {
@@ -212,9 +214,9 @@ class ZappkaView extends WatchUi.View {
             }
             var remaining = TotpGenerator.secondsRemaining(now, ZappkaProtocol.TIME_STEP);
             if (_sub != null) {
-                CountdownRenderer.drawInSubscreen(dc, _sub as Graphics.BoundingBox, remaining, _checkout);
+                CountdownRenderer.drawInSubscreen(dc, _sub as Graphics.BoundingBox, remaining, _checkout, Prefs.phoneStale(now));
             } else if (l.textY >= 0) {
-                CountdownRenderer.drawBelow(dc, l.x + l.side / 2, l.textY, remaining, _checkout);
+                CountdownRenderer.drawBelow(dc, l.x + l.side / 2, l.textY, remaining, _checkout, Prefs.phoneStale(now));
             }
             return;
         }
@@ -251,12 +253,13 @@ class ZappkaInfoView extends WatchUi.View {
     }
 
     function onUpdate(dc as Graphics.Dc) as Void {
-        TextScreen.draw(dc, statusText(CredentialStore.load()[1], Time.now().value()));
+        var now = Time.now().value();
+        TextScreen.draw(dc, statusText(CredentialStore.load()[1], now, Prefs.phoneAgo(now)));
     }
 
-    static function statusText(creds as ZappkaCredentials or Null, now as Number) as String {
+    static function statusText(creds as ZappkaCredentials or Null, now as Number, phoneAgo as String) as String {
         var id = creds != null ? "ID " + creds.maskedUserId() : "no account";
         return id + "\nUTC " + now + "\nnext in " +
-            TotpGenerator.secondsRemaining(now, ZappkaProtocol.TIME_STEP) + " s";
+            TotpGenerator.secondsRemaining(now, ZappkaProtocol.TIME_STEP) + " s\nphone " + phoneAgo;
     }
 }

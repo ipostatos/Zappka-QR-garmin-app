@@ -15,6 +15,8 @@ module ZappkaMenu {
             :checkout, view.isCheckout(), null));
         menu.addItem(new WatchUi.ToggleMenuItem(Rez.Strings.MenuVibrate, Rez.Strings.MenuVibrateSub,
             :vibrate, Prefs.vibrateOnRotate(), null));
+        menu.addItem(new WatchUi.MenuItem(Rez.Strings.MenuAutoExit, Prefs.autoExitLabel(Prefs.autoExitSeconds()),
+            :autoexit, null));
         menu.addItem(new WatchUi.MenuItem(Rez.Strings.MenuStatus, Rez.Strings.MenuStatusSub, :status, null));
         var creds = CredentialStore.load()[1];
         if (creds != null) {
@@ -42,6 +44,9 @@ class ZappkaMenuDelegate extends WatchUi.Menu2InputDelegate {
             _view.setCheckout((item as WatchUi.ToggleMenuItem).isEnabled());
         } else if (id == :vibrate) {
             Prefs.setVibrateOnRotate((item as WatchUi.ToggleMenuItem).isEnabled());
+        } else if (id == :autoexit) {
+            item.setSubLabel(Prefs.autoExitLabel(Prefs.cycleAutoExit()));
+            WatchUi.requestUpdate();
         } else if (id == :status) {
             WatchUi.pushView(new ZappkaInfoView(), new WatchUi.BehaviorDelegate(), WatchUi.SLIDE_LEFT);
         } else if (id == :about) {

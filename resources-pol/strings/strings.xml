@@ -22,4 +22,5 @@
     <string id="SignOutConfirm">Wylogować i usunąć\nkonto z tego\nzegarka?</string>
     <string id="AboutBody">Licencja MIT\nNieoficjalna,\nnie od Zabki</string>
     <string id="ConfirmNewData">Użyć nowych\ndanych dla</string>
+    <string id="MenuAutoExit">Auto-zamknięcie</string>
 </strings>
