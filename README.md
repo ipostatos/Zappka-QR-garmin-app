@@ -153,9 +153,12 @@ independent Python TOTP.
 1. **Get your account data once** (`ployId` and the 64-character hex secret) with the login script
    of [iGerman00/zabka-totp-webapp](https://github.com/iGerman00/zabka-totp-webapp). It signs in
    with your phone number and an SMS code. Read the script before running it.
-2. **Install the app**: copy the `.prg` to `GARMIN\APPS` over USB.
-3. **Garmin Connect** → device → Connect IQ apps → Zappka QR → Settings: enter the user ID and the
-   secret.
+2. **Build a personal `.prg`** with the account as its settings defaults:
+   `sh tools/build-personal.sh <device> developer_key.der` (reads the encrypted vault). Garmin
+   Connect shows settings only for apps from the Connect IQ Store, so for a USB install the
+   account goes in at build time.
+3. **Install**: over USB delete an older Zappka `.prg` and its file in `GARMIN\APPS\SETTINGS`, copy
+   the new `.prg` to `GARMIN\APPS`, then delete it from the computer: it contains the secret.
 4. **Open the app** on the watch. The settings field is blanked and the secret moves into watch
    storage.
 
@@ -231,7 +234,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 - **The secret never leaves the watch at runtime.** No permissions are declared, so the app cannot reach the network.
 - **Storage:** Connect IQ has no keystore. The secret lives in `Application.Storage` (app-private, not encrypted by the app). Anyone with developer-level access to the watch filesystem could read it.
-- **Provisioning:** settings travel phone → Garmin Connect → watch once. The app blanks the field before anything else.
+- **Provisioning:** the account enters once, as the settings defaults of a personal build (USB install) or through the app settings in Garmin Connect (store install). Either way the app blanks the field before anything else.
 - **Repository:** no real credentials. Tests and screenshots use the public example account. CI scans every push for secrets.
 
 Details: [`THREAT_MODEL.md`](THREAT_MODEL.md). Reporting: [`SECURITY.md`](SECURITY.md).
